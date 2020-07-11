@@ -51,8 +51,8 @@
 @php
   use App\Models\Order;
 
-  $date_from = Session::has('date_from') ? Session::get('date_from') : Order::count() ? Order::orderBy('date')->first()->date : $today;
-  $date_to = Session::has('date_to') ? Session::get('date_to') : Order::count() ? Order::orderBy('date', 'DESC')->first()->date : $today;
+  $date_from = Session::has('date_from') ? Session::get('date_from') : (Order::count() ? Order::orderBy('date')->first()->date : $today);
+  $date_to = Session::has('date_to') ? Session::get('date_to') : (Order::count() ? Order::orderBy('date', 'DESC')->first()->date : $today);
 @endphp
 
       <div class="col-md-7 px-0">
@@ -429,7 +429,7 @@
     $(`#editItem${id}-total_price`).text(total_price.toFixed(2));
     $(`#editItem${id}-sst_amount`).text(sst_amount.toFixed(2));
     $(`#editItem${id}-sub_total`).text(sub_total.toFixed(2));
-    $(`#editItem${id}-return_amount`).text($('#return{{$id}}').is(':checked') ? '-'+sub_total.toFixed(2) : '');
+    $(`#editItem${id}-return_amount`).text($(`#return${id}`).is(':checked') ? '-'+sub_total.toFixed(2) : '');
   }
 
   function cancelEdit(id)

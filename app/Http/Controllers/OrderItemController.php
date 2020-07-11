@@ -240,8 +240,8 @@ class OrderItemController extends Controller
         round2( SUM( ( order_items.sst_perc * order_items.quantity * CASE WHEN `return` THEN -order_items.price ELSE order_items.price END )
         + ( order_items.quantity * CASE WHEN `return` THEN -order_items.price ELSE order_items.price END) ) ) AS sub_total
         ")
-        ->join('orders','projects.id','=','project_id')
-        ->join('order_items','orders.id','=','order_id')
+        ->leftJoin('orders','projects.id','=','project_id')
+        ->leftJoin('order_items','orders.id','=','order_id')
         ->groupBy('projects.id')
         ->get();
     }

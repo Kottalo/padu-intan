@@ -114,7 +114,7 @@
     </thead>
     <tbody>
       @foreach ($suppliers as $supplier)
-      <tr>
+      <tr @if ($supplier->order) class="table-warning" @endif>
         <td>{{ $supplier->name }}</td>
         <td>{{ $supplier->contact }}</td>
         <td>{{ $supplier->address }}</td>
