@@ -398,7 +398,7 @@
       <td>
         <div class="row mx-auto">
           <div class="col p-0 m-0 text-center">
-            <a class="btn btn-sm btn-link py-1 px-2" style="font-size: 12px;height: 24px;" type="submit" form="editForm${id}"">更新</a>
+            <button class="btn btn-sm btn-link py-1 px-2" style="font-size: 12px;height: 24px;" type="submit" form="editForm${id}">更新</button>
           </div>
           <div class="col p-0 m-0 text-left">
             <a class="btn btn-sm btn-link py-1 px-2" style="font-size: 12px;height: 24px;" onclick="javascript: cancelEdit(${id})">取消</a>
