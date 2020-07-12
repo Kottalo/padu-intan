@@ -176,11 +176,11 @@
             <td id="order_item{{$id}}-quantity" class="" data-unit="{{$order_item->unit ? $order_item->unit->name : ''}}">{{ $order_item->quantity . ' ' . ($order_item->unit ? $order_item->unit->name : '') }}</td>
             <td id="order_item{{$id}}-price" class="text-right @if ($order_item->return) text-danger @endif">{{ $order_item->price }}</td>
             <td id="order_item{{$id}}-total_price" class="text-right @if ($order_item->return) text-danger @endif">{{ $order_item->total_price }}</td>
-            <td id="order_item{{$id}}-sst_perc" class="text-right" style="max-width: 20px;">{{ $order_item->sst_perc }}%</td>
-            <td id="order_item{{$id}}-sst_amount" class="text-right">{{ $order_item->sst_amount }}</td>
+            <td id="order_item{{$id}}-sst_perc" class="text-right @if ($order_item->return) text-danger @endif" style="max-width: 20px;">{{ $order_item->sst_perc }}%</td>
+            <td id="order_item{{$id}}-sst_amount" class="text-right @if ($order_item->return) text-danger @endif">{{ $order_item->sst_amount }}</td>
             <td id="order_item{{$id}}-return_amount" class="text-right text-danger">@if ($order_item->return) {{ '-' . $order_item->sub_total }} @endif</td>
             <td id="order_item{{$id}}-sub_total" class="text-right @if ($order_item->return) text-danger @endif">{{ ($order_item->return ? '-' : '') . $order_item->sub_total }}</td>
-            <td id="order_item{{$id}}-total_counter" class="text-right">{{ number_format($total_counter, 2) }}</td>
+            <td id="order_item{{$id}}-total_counter" class="text-right @if ($order_item->return) text-danger @endif">{{ number_format($total_counter, 2) }}</td>
             <td id="order_item{{$id}}-remarks" class="text-right">{{ $order_item->remarks }}</td>
             <td class="text-left">
               <div class="row mx-auto">
@@ -196,11 +196,11 @@
           @endforeach
           <tr>
             <th class="text-right" colspan="7">Total</th>
-            <th class="text-right">{{ $order->total_price }}</th>
+            <th class="text-right @if ($order->total_price < 0) text-danger @endif">{{ $order->total_price }}</th>
             <th></th>
-            <th class="text-right">{{ $order->sst_amount }}</th>
+            <th class="text-right @if ($order->total_price < 0) text-danger @endif">{{ $order->sst_amount }}</th>
             <th></th>
-            <th class="text-right">{{ $order->sub_total }}</th>
+            <th class="text-right @if ($order->total_price < 0) text-danger @endif">{{ $order->sub_total }}</th>
             <th></th>
             <th></th>
             <th></th>
@@ -212,11 +212,11 @@
         @endforeach
         <tr>
           <th class="text-right" colspan="7">Sub Total</th>
-          <th class="text-right">{{ $project->total_price }}</th>
+          <th class="text-right @if ($project->total_price < 0) text-danger @endif">{{ $project->total_price }}</th>
           <th></th>
-          <th class="text-right">{{ $project->sst_amount }}</th>
+          <th class="text-right @if ($project->sst_amount < 0) text-danger @endif">{{ $project->sst_amount }}</th>
           <th></th>
-          <th class="text-right">{{ $project->sub_total }}</th>
+          <th class="text-right @if ($project->sub_total < 0) text-danger @endif">{{ $project->sub_total }}</th>
           <th></th>
           <th></th>
           <th></th>
@@ -378,7 +378,7 @@
         0.00
       </td>
       <td class="text-right" style="width: 40px">
-        <input id="editItem${id}-sst_perc" value="${sst_perc}" type="text" class="form-control form-control-sm text-right" oninput="updateEditItem(${id})" form="editForm${id}">
+        <input id="editItem${id}-sst_perc" value="${sst_perc}" name="sst_perc" type="text" class="form-control form-control-sm text-right" oninput="updateEditItem(${id})" form="editForm${id}">
       </td>
       <th id="editItem${id}-sst_amount" class="text-right pt-1">
         0.00
