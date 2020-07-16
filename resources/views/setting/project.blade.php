@@ -71,7 +71,7 @@
             <label for="cost" class="col-md-{{ $formCols[0] }} col-form-label text-md-right">工程数额</label>
 
             <div class="col-md-{{ $formCols[1] }}">
-              <input id="cost" name="cost" type="text" class="form-control" onkeypress="return isNumberKey(event)" required>
+              <input id="cost" name="cost" type="text" class="form-control pos-number-dot" required>
             </div>
           </div>
 
