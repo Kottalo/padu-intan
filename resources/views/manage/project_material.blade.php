@@ -16,9 +16,9 @@
   <form id="form" action="/order_items/getItems" method="POST">
     @csrf
     <div class="row">
-      <div class="col-md-5">
+      <div class="col-md-6">
         <div class="row">
-          <div class="input-group mb-3 col-md-6">
+          <div class="input-group mb-3 px-0 col">
             <div class="container-fluid pl-0">
               <select id="projectIds" name="projectIds[]" class="custom-select ml-0" multiple="multiple">
                 @foreach ($projects as $project)
@@ -28,9 +28,16 @@
             </div>
           </div>
 
-          <div class="input-group mb-3 col-md-6">
+          <div class="input-group mb-3 px-0 col">
             <div class="container-fluid pl-0">
               <select id="supplierIds" name="supplierIds[]" class="custom-select ml-0" multiple="multiple">
+              </select>
+            </div>
+          </div>
+
+          <div class="input-group mb-3 px-0 col">
+            <div class="container-fluid pl-0">
+              <select id="supplierIdsEdit" name="supplierIdsEdit[]" class="custom-select ml-0" multiple="multiple">
                 @foreach ($suppliers as $supplier)
                 <option value="{{ $supplier->id }}">{{ $supplier->name }}</option>
                 @endforeach
@@ -41,11 +48,23 @@
       </div>
 
       <script type="text/javascript">
+        $(document).ready(function() {
+          $('#projectIds').multiselect({
+            onChange: function(option, checked, select) {
+              alert('Changed option ' + $(option).val() + '.');
+            }
+          });
+        });
+
         $('#projectIds').multiselect(projectMultiSelectConfig);
         $('#supplierIds').multiselect(supplierMultiSelectConfig);
+        $('#supplierIdsEdit').multiselect(supplierEditMultiSelectConfig);
+
+        var supplierIds = [{{ join(',', Session::has('supplierIds') ? Session::get('supplierIds') : [] ) }}];
 
         $('#projectIds').multiselect('select', [{{ join(',', Session::has('projectIds') ? Session::get('projectIds') : [] ) }}]);
-        $('#supplierIds').multiselect('select', [{{ join(',', Session::has('supplierIds') ? Session::get('supplierIds') : [] ) }}]);
+        $('#supplierIds').multiselect('select', supplierIds);
+        $('#supplierIdsEdit').multiselect('select', [{{ join(',', Session::has('supplierIdsEdit') ? Session::get('supplierIdsEdit') : [] ) }}]);
       </script>
 
 @php
@@ -55,20 +74,20 @@
   $date_to = Session::has('date_to') ? Session::get('date_to') : (Order::count() ? Order::orderBy('date', 'DESC')->first()->date : $today);
 @endphp
 
-      <div class="col-md-7 px-0">
+      <div class="col-md-6 px-0">
         <div class="row">
           <div class="input-group mb-3 col-md-5 pr-0">
             <label for="start_on" class="col-md-5 col-form-label text-md-right">日期从</label>
 
             <div class="col-md-7 px-0">
-              <input id="date_from" name="date_from" type="date" class="form-control" value="{{ $date_from }}" required>
+              <input id="date_from" name="date_from" type="date" class="form-control px-1" value="{{ $date_from }}" required>
             </div>
           </div>
 
-          <div class="input-group mb-3 pl-0 col-md-4">
+          <div class="input-group mb-3 pl-0 col-md-5">
             <label for="start_on" class="col-md-2 col-form-label text-md-left">到</label>
 
-            <div class="col-md-10 pl-0">
+            <div class="col-md-8 pl-0">
               <input id="date_to" name="date_to" type="date" class="form-control" value="{{ $date_to }}" required>
             </div>
           </div>
@@ -89,18 +108,19 @@
 
   $projectIds = Session::get('projectIds');
   $supplierIds = Session::get('supplierIds');
+  $suppliersEdit = Session::get('suppliersEdit');
 
   $items = OrderItemController::getItemsByParams($projectIds, $supplierIds, $date_from, $date_to);
 
   $table_colspan = 15;
 
   $headers = [
-    '日期' => [ 'width' => 160, 'align' => 'left' ],
-    '供应商' => [ 'width' => 160, 'align' => 'left' ],
+    '日期' => [ 'width' => 150, 'align' => 'left' ],
+    '供应商' => [ 'width' => 150, 'align' => 'left' ],
     '货单号码' => [ 'width' => 120, 'align' => 'left' ],
-    '货名' => [ 'width' => 260, 'align' => 'left' ],
+    '货名' => [ 'width' => 250, 'align' => 'left' ],
     '退' => [ 'width' => 40 ],
-    '数量' => [ 'width' => 110 ],
+    '数量' => [ 'width' => 100 ],
     '价格' => [ 'width' => 80 ],
     '总价格' => [ 'width' => 100 ],
     'SST 银额' => [ 'colspan' => 2, 'width' => 120 ],
@@ -115,32 +135,39 @@
 @endphp
 
 <style media="screen">
+  #orderTable
+  {
+    font-family: verdana;
+    border: 1px solid #6099ee !important;
+  }
+
   #orderTable td, #orderTable th
   {
     padding-top: 0px;
     padding-bottom: 0px;
+    border: 2px solid #6099ee;
   }
 
   #orderTable td
   {
-    font-size: 14px;
+    font-size: 12px;
   }
 
   #orderTable .project-name
   {
-    font-size: 18px;
+    font-size: 16px;
   }
 
   #orderTable .table-headers
   {
-    font-size: 13px;
-    background: #3490dc;
+    font-size: 12px;
+    background: #6099ee;
     color: white;
   }
 </style>
 
 <div class="px-1">
-  <table id="orderTable" class="table table-sm table-bordered table-hover">
+  <table id="orderTable" class="table table-sm table-bordered table-hover bg-white">
     <tbody>
       @foreach ($items as $project)
       <tr>
@@ -230,7 +257,7 @@
           </td>
           <td>
             <select name="supplier_id" class="form-control form-control-sm" form="createForm{{$id}}">
-              @foreach ($suppliers as $supplier)
+              @foreach ($suppliersEdit as $supplier)
               <option value="{{ $supplier->id }}">{{ $supplier->name }}</option>
               @endforeach
             </select>
@@ -246,12 +273,12 @@
           </td>
           <td>
             <div class="input-group input-group-sm">
-              <input id="quantity{{$id}}" name="quantity" type="text" class="form-control" oninput="updateValues({{$id}})" form="createForm{{$id}}">
+              <input id="quantity{{$id}}" name="quantity" type="text" class="form-control pos-number" oninput="updateValues({{$id}})" form="createForm{{$id}}">
               <input name="unit_name" type="text" class="form-control" form="createForm{{$id}}">
             </div>
           </td>
           <td>
-            <input id="price{{$id}}" name="price" type="text" class="form-control form-control-sm text-right" required oninput="updateValues({{$id}})" form="createForm{{$id}}">
+            <input id="price{{$id}}" name="price" type="text" class="form-control form-control-sm text-right pos-number-dot" required oninput="updateValues({{$id}})" form="createForm{{$id}}">
           </td>
           <th id="total_price{{$id}}" class="text-right pt-1">
             0.00
@@ -351,7 +378,7 @@
       </td>
       <td>
         <select id="editItem${id}-supplier_id" name="supplier_id" class="form-control form-control-sm" form="editForm${id}">
-          @foreach ($suppliers as $supplier)
+          @foreach ($suppliersEdit as $supplier)
           <option value="{{ $supplier->id }}">{{ $supplier->name }}</option>
           @endforeach
         </select>

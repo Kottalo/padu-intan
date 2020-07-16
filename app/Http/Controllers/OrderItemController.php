@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use DB;
-use App\Models\{ Project, Order, Item, OrderItem, Unit };
+use App\Models\{ Project, Order, Item, OrderItem, Unit, Supplier };
 
 class OrderItemController extends Controller
 {
@@ -192,9 +192,14 @@ class OrderItemController extends Controller
 
     public function getItems(Request $request)
     {
+        $suppliersEdit = Supplier::whereIn('id', $request->supplierIdsEdit)
+        ->get();
+
         session([
           'projectIds' => $request->projectIds,
           'supplierIds' => $request->supplierIds,
+          'supplierIdsEdit' => $request->supplierIdsEdit,
+          'suppliersEdit' => $suppliersEdit,
           'date_from' => $request->date_from,
           'date_to' => $request->date_to,
         ]);

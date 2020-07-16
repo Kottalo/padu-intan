@@ -37295,8 +37295,8 @@ window.axios.defaults.headers.common = {
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! /home/padu/public_html/resources/js/app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! /home/padu/public_html/resources/sass/app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! /home/kottalo/Desktop/Projects/Laravel/padu-intan/resources/js/app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! /home/kottalo/Desktop/Projects/Laravel/padu-intan/resources/sass/app.scss */"./resources/sass/app.scss");
 
 
 /***/ })

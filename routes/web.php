@@ -49,6 +49,7 @@ Route::middleware(['auth'])->group(function () {
     ]);
 
     Route::post('/order_items/getItems', 'OrderItemController@getItems');
+    Route::post('/suppliers/getSuppliersByProjectIds', 'SupplierController@getSuppliersByProjectIds');
 });
 
 Auth::routes();
