@@ -108,7 +108,7 @@
 
   $projectIds = Session::get('projectIds');
   $supplierIds = Session::get('supplierIds');
-  $suppliersEdit = Session::get('suppliersEdit');
+  $suppliersEdit = Session::has('suppliersEdit') ? Session::get('suppliersEdit') : [];
 
   $items = OrderItemController::getItemsByParams($projectIds, $supplierIds, $date_from, $date_to);
 
