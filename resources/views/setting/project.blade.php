@@ -4,6 +4,8 @@
   use Carbon\Carbon;
   use App\Http\Controllers\ProjectController;
 
+  $suppliers = App\Models\Supplier::get();
+
   $formCols = [2,8];
 
   $headers = [
@@ -24,9 +26,10 @@
 @endphp
 
 @section('content')
+
 <x-confirm-modal id="deleteConfirmModal" title="确定删除" function="confirmDelete()">确定要删除工程吗？</x-confirm-modal>
 
-<div id="crudAccordion" class="accordion col-md-6 mx-auto my-5">
+<div id="crudAccordion" class="col-md-6 mx-auto my-5">
   <div class="card">
     <div class="card-header" id="headingOne">
       <a type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
@@ -75,6 +78,8 @@
             </div>
           </div>
 
+
+
           <div class="form-group row">
             <label for="address" class="col-md-{{ $formCols[0] }} col-form-label text-md-right">地址</label>
 
@@ -114,6 +119,26 @@
               <input id="email" name="email" type="email" class="form-control">
             </div>
           </div>
+
+          <div class="form-group row">
+            <label for="supplierIds" class="col-md-{{ $formCols[0] }} col-form-label text-md-right">供应商</label>
+
+            <div class="col-md-{{ $formCols[1] }}">
+              <div class="input-group px-0 col">
+                <div class="container-fluid pl-0">
+                  <select id="supplierIds" name="supplierIds[]" class="custom-select ml-0" multiple="multiple">
+                    @foreach ($suppliers as $supplier)
+                    <option value="{{ $supplier->id }}">{{ $supplier->name }}</option>
+                    @endforeach
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <script type="text/javascript">
+            $('#supplierIds').multiselect(supplierMultiSelectConfig);
+          </script>
 
           <div class="form-group row mb-0 justify-content-center">
             <div class="col-md-6">
@@ -180,6 +205,8 @@
     clearForm();
   });
 
+  var suppliers = {{ ProjectController::jsProjectSupplierIdDict() }};
+
   var customers = {
     @foreach ($customers as $customer)
       {{$customer->name}}: {
@@ -239,6 +266,7 @@
       $('#contact').val(project.customer.contact);
       $('#fax').val(project.customer.fax);
       $('#email').val(project.customer.email);
+      $('#supplierIds').multiselect('select', suppliers[id]);
     });
 
     $('#name').focus();
@@ -280,6 +308,5 @@
       location.reload(true);
     });
   }
-
 </script>
 @endsection
