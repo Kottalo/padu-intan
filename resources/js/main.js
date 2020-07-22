@@ -113,31 +113,3 @@ var supplierMultiSelectConfig = {
     }
   }
 };
-
-var supplierEditMultiSelectConfig = {
-  selectAllText: '全部',
-  enableFiltering: true,
-  disableIfEmpty: true,
-  buttonWidth: '100%',
-  includeSelectAllOption: true,
-  buttonText: function(options, select) {
-    if (options.length === 0)
-    {
-      return '选择编辑供应商...';
-    }
-    else if (options.length > 0 && options.length < select[0].options.length)
-    {
-      var array = [];
-      for (i=0;i<options.length;i++)
-      {
-        array.push(options[i].innerText);
-      }
-
-      return array.join(', ');
-    }
-    else
-    {
-       return "全部编辑供应商";
-    }
-  }
-};

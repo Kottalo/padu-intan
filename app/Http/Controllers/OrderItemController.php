@@ -192,16 +192,12 @@ class OrderItemController extends Controller
 
     public function getItems(Request $request)
     {
-        $suppliersEdit = Supplier::whereIn('id', $request->supplierIdsEdit)
-        ->get();
-
         session([
           'projectIds' => $request->projectIds,
           'supplierIds' => $request->supplierIds,
-          'supplierIdsEdit' => $request->supplierIdsEdit,
-          'suppliersEdit' => $suppliersEdit,
           'date_from' => $request->date_from,
           'date_to' => $request->date_to,
+          'keep_selections' => $request->keep_selections,
         ]);
 
         return redirect()->back();
@@ -209,6 +205,11 @@ class OrderItemController extends Controller
 
     public static function getItemsByParams($projectIds, $supplierIds, $date_from, $date_to)
     {
+        if (!$projectIds) $projectIds = [];
+        if (!$supplierIds) $supplierIds = [];
+
+        $projectId_sql = $projectIds ? '(' . join(',', $projectIds) . ')' : '(0)';
+
         return Project::with([
             'orders' => function($query) use ($supplierIds, $date_from, $date_to)
             {
@@ -237,16 +238,32 @@ class OrderItemController extends Controller
             'orders.order_items.unit',
             'orders.order_items.item',
             'orders.order_items.order.supplier',
-            'orders.supplier'
-        ])->whereIn('projects.id', collect($projectIds))
-        ->selectRaw("projects.id, projects.name,
-        round2( SUM( order_items.quantity * CASE WHEN `return` THEN -order_items.price ELSE order_items.price END ) ) AS total_price,
-        round2( SUM( order_items.sst_perc * order_items.quantity * CASE WHEN `return` THEN -order_items.price ELSE order_items.price END ) ) AS sst_amount,
-        round2( SUM( ( order_items.sst_perc * order_items.quantity * CASE WHEN `return` THEN -order_items.price ELSE order_items.price END )
-        + ( order_items.quantity * CASE WHEN `return` THEN -order_items.price ELSE order_items.price END) ) ) AS sub_total
-        ")
+            'orders.supplier',
+            'suppliers',
+        ])
+        ->selectRaw("projects.id")
+        ->whereIn('projects.id', collect($projectIds))
         ->leftJoin('orders','projects.id','=','project_id')
         ->leftJoin('order_items','orders.id','=','order_id')
+        ->leftJoin(
+            DB::raw("(SELECT projects.id,
+            round2( SUM( order_items.quantity * CASE WHEN `return` THEN -order_items.price ELSE order_items.price END ) ) AS total_price,
+            round2( SUM( order_items.sst_perc * order_items.quantity * CASE WHEN `return` THEN -order_items.price ELSE order_items.price END ) ) AS sst_amount,
+            round2( SUM( ( order_items.sst_perc * order_items.quantity * CASE WHEN `return` THEN -order_items.price ELSE order_items.price END )
+            + ( order_items.quantity * CASE WHEN `return` THEN -order_items.price ELSE order_items.price END) ) ) AS sub_total
+            FROM projects
+            LEFT JOIN orders ON projects.id = orders.project_id
+            LEFT JOIN order_items ON orders.id = order_items.order_id
+            WHERE projects.id IN $projectId_sql
+            AND orders.date BETWEEN '$date_from' AND '$date_to'
+            GROUP BY projects.id)
+            AS p1
+            "),
+            function($join)
+            {
+                $join->on('projects.id', '=', 'p1.id');
+            }
+        )
         ->groupBy('projects.id')
         ->get();
     }

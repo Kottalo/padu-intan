@@ -10,4 +10,9 @@ class Supplier extends Model
     {
         return $this->hasMany('App\Models\Order');
     }
+
+    public function projects()
+    {
+        return $this->belongsToMany('App\Models\Project', 'project_suppliers');
+    }
 }

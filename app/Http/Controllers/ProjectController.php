@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-use App\Models\{ Project, Customer };
+use App\Models\{ Project, Customer, ProjectSupplier };
 
 class ProjectController extends Controller
 {
@@ -65,6 +65,16 @@ class ProjectController extends Controller
         $project->remarks = $request->remarks;
 
         $project->save();
+
+        foreach ($request->supplierIds as $supplierId)
+        {
+            $ps = new ProjectSupplier;
+
+            $ps->project_id = $project->id;
+            $ps->supplier_id = $supplierId;
+
+            $ps->save();
+        }
 
         return redirect()->back();
     }
@@ -129,6 +139,18 @@ class ProjectController extends Controller
 
         $project->save();
 
+        ProjectSupplier::whereProjectId($project->id)->delete();
+
+        foreach ($request->supplierIds as $supplierId)
+        {
+            $ps = new ProjectSupplier;
+
+            $ps->project_id = $project->id;
+            $ps->supplier_id = $supplierId;
+
+            $ps->save();
+        }
+
         return redirect()->back();
     }
 
@@ -141,5 +163,26 @@ class ProjectController extends Controller
     public function destroy($id)
     {
         Project::destroy($id);
+    }
+
+    public static function jsProjectSupplierIdDict()
+    {
+        $projects = Project::with('suppliers')->get();
+
+        $project_suppliers = [];
+
+        foreach ($projects as $project)
+        {
+            $supplierIds = [];
+
+            foreach ($project->suppliers as $supplier)
+            {
+                array_push($supplierIds, $supplier->id);
+            }
+
+            array_push($project_suppliers, $project->id . ':' . '[' . join(',', $supplierIds) . ']');
+        }
+
+        return '{' . join(',', $project_suppliers) . '}';
     }
 }

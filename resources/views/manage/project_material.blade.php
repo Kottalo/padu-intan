@@ -4,7 +4,6 @@
   use Carbon\Carbon;
 
   $projects = App\Models\Project::get();
-  $suppliers = App\Models\Supplier::get();
 
   $today = Carbon::now()->format('Y-m-d');
 @endphp
@@ -12,11 +11,11 @@
 @section('content')
 <x-confirm-modal id="deleteConfirmModal" title="确定删除" function="confirmDelete()">确定要删除此工程材料吗？</x-confirm-modal>
 
-<div class="col-md-10 mx-auto">
+<div class="col-md-11 mx-auto">
   <form id="form" action="/order_items/getItems" method="POST">
     @csrf
     <div class="row">
-      <div class="col-md-6">
+      <div class="col-md-4">
         <div class="row">
           <div class="input-group mb-3 px-0 col">
             <div class="container-fluid pl-0">
@@ -34,37 +33,23 @@
               </select>
             </div>
           </div>
-
-          <div class="input-group mb-3 px-0 col">
-            <div class="container-fluid pl-0">
-              <select id="supplierIdsEdit" name="supplierIdsEdit[]" class="custom-select ml-0" multiple="multiple">
-                @foreach ($suppliers as $supplier)
-                <option value="{{ $supplier->id }}">{{ $supplier->name }}</option>
-                @endforeach
-              </select>
-            </div>
-          </div>
         </div>
       </div>
 
       <script type="text/javascript">
-        $(document).ready(function() {
-          $('#projectIds').multiselect({
-            onChange: function(option, checked, select) {
-              alert('Changed option ' + $(option).val() + '.');
-            }
-          });
-        });
-
         $('#projectIds').multiselect(projectMultiSelectConfig);
         $('#supplierIds').multiselect(supplierMultiSelectConfig);
-        $('#supplierIdsEdit').multiselect(supplierEditMultiSelectConfig);
 
-        var supplierIds = [{{ join(',', Session::has('supplierIds') ? Session::get('supplierIds') : [] ) }}];
+        var keep_selections = {{ Session::get('keep_selections') ? 'true' : 'false' }};
 
-        $('#projectIds').multiselect('select', [{{ join(',', Session::has('projectIds') ? Session::get('projectIds') : [] ) }}]);
-        $('#supplierIds').multiselect('select', supplierIds);
-        $('#supplierIdsEdit').multiselect('select', [{{ join(',', Session::has('supplierIdsEdit') ? Session::get('supplierIdsEdit') : [] ) }}]);
+        var supplierIds = [];
+
+        if (keep_selections)
+        {
+            $('#projectIds').multiselect('select', [{{ join(',', Session::has('projectIds') ? Session::get('projectIds') : [] ) }}]);
+
+            supplierIds = [{{ join(',', Session::has('supplierIds') ? Session::get('supplierIds') : [] ) }}];
+        }
       </script>
 
 @php
@@ -72,27 +57,43 @@
 
   $date_from = Session::has('date_from') ? Session::get('date_from') : (Order::count() ? Order::orderBy('date')->first()->date : $today);
   $date_to = Session::has('date_to') ? Session::get('date_to') : (Order::count() ? Order::orderBy('date', 'DESC')->first()->date : $today);
+
+  $date_from = Session::get('keep_selections') ? $date_from : $today;
+  $date_to = Session::get('keep_selections') ? $date_to : $today;
 @endphp
 
-      <div class="col-md-6 px-0">
+      <div class="col-md-5 px-0">
         <div class="row">
-          <div class="input-group mb-3 col-md-5 pr-0">
-            <label for="start_on" class="col-md-5 col-form-label text-md-right">日期从</label>
+          <!-- <div class="input-group mb-3 col-md-5 pr-0"> -->
+            <label for="start_on" class="col-md-2 col-form-label text-md-right">日期从</label>
 
-            <div class="col-md-7 px-0">
+            <div class="col-md-4 px-0">
               <input id="date_from" name="date_from" type="date" class="form-control px-1" value="{{ $date_from }}" required>
             </div>
-          </div>
+          <!-- </div> -->
 
-          <div class="input-group mb-3 pl-0 col-md-5">
+          <!-- <div class="input-group mb-3 pl-0 col-md-5"> -->
             <label for="start_on" class="col-md-2 col-form-label text-md-left">到</label>
 
-            <div class="col-md-8 pl-0">
+            <div class="col-md-4 pl-0">
               <input id="date_to" name="date_to" type="date" class="form-control" value="{{ $date_to }}" required>
+            </div>
+          <!-- </div> -->
+        </div>
+      </div>
+
+      <div class="col-md-3">
+        <div class="row">
+          <div class="col-md-5">
+            <div class="form-check">
+              <input id="keep_selections" {{ Session::get('keep_selections') ? 'checked' : '' }} name="keep_selections" class="form-check-input" type="checkbox">
+              <label class="form-check-label" for="keep_selections">
+                保留选项
+              </label>
             </div>
           </div>
 
-          <div class="input-group mb-3 col-md-2">
+          <div class="col-md-7">
             <button id="confirmBtn" type="submit" class="btn btn-primary btn-block">
               提交
             </button>
@@ -108,7 +109,6 @@
 
   $projectIds = Session::get('projectIds');
   $supplierIds = Session::get('supplierIds');
-  $suppliersEdit = Session::has('suppliersEdit') ? Session::get('suppliersEdit') : [];
 
   $items = OrderItemController::getItemsByParams($projectIds, $supplierIds, $date_from, $date_to);
 
@@ -212,7 +212,7 @@
             <td class="text-left">
               <div class="row mx-auto">
                 <div class="col p-0 m-0 text-center">
-                  <a class="btn btn-sm btn-link py-1 px-2" style="font-size: 12px;height: 24px;" href="javascript: toEdit({{ $id }})">修改</a>
+                  <a class="btn btn-sm btn-link py-1 px-2" style="font-size: 12px;height: 24px;" href="javascript: toEdit({{ $id }}, {{ $project->id }})">修改</a>
                 </div>
                 <div class="col p-0 m-0 text-left">
                   <a class="btn btn-sm btn-link py-1 px-2" style="font-size: 12px;height: 24px;" data-toggle="modal" data-target="#deleteConfirmModal" onclick="javascript: toDelete({{ $order_item->id }})">删除</a>
@@ -256,8 +256,8 @@
             <input name="date" type="date" class="form-control form-control-sm" value="{{ $today }}" form="createForm{{$id}}" required>
           </td>
           <td>
-            <select name="supplier_id" class="form-control form-control-sm" form="createForm{{$id}}">
-              @foreach ($suppliersEdit as $supplier)
+            <select id="supplier_id{{ $id }}" name="supplier_id" class="form-control form-control-sm" form="createForm{{$id}}">
+              @foreach ($project->suppliers as $supplier)
               <option value="{{ $supplier->id }}">{{ $supplier->name }}</option>
               @endforeach
             </select>
@@ -347,7 +347,7 @@
     $('#return_amount'+id).text($('#return'+id).is(':checked') ? '-'+sub_total.toFixed(2) : '');
   }
 
-  function toEdit(id)
+  function toEdit(id, project_id)
   {
     var tr = $('#order_item'+id);
 
@@ -378,9 +378,6 @@
       </td>
       <td>
         <select id="editItem${id}-supplier_id" name="supplier_id" class="form-control form-control-sm" form="editForm${id}">
-          @foreach ($suppliersEdit as $supplier)
-          <option value="{{ $supplier->id }}">{{ $supplier->name }}</option>
-          @endforeach
         </select>
       </td>
       <td>
@@ -434,6 +431,10 @@
       </td>
     </tr>
     `);
+
+    var options = $(`#supplier_id${project_id} option`);
+
+    $(`#editItem${id}-supplier_id`).append(options.clone());
 
     setTimeout(function() {
       $(`#editItem${id}-supplier_id`).val(supplier_id);
