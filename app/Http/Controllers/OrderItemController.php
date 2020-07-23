@@ -102,6 +102,16 @@ class OrderItemController extends Controller
 
         $order_item->save();
 
+        $supplierIds = session()->get('supplierIds');
+        if (!array_search($supplier_id, $supplierIds)) array_push($supplierIds, $supplier_id);
+
+        session([
+          'supplierIds' => $supplierIds,
+          'date_from' => $request->date,
+          'date_to' => \Carbon\Carbon::now()->format('Y-m-d'),
+          'keep_selections' => $request->keep_selections,
+        ]);
+
         return redirect()->back()->with('scrollOffset', $request->scrollOffset);
     }
 
@@ -241,7 +251,7 @@ class OrderItemController extends Controller
             'orders.supplier',
             'suppliers',
         ])
-        ->selectRaw("projects.id")
+        ->selectRaw("projects.id, projects.name")
         ->whereIn('projects.id', collect($projectIds))
         ->leftJoin('orders','projects.id','=','project_id')
         ->leftJoin('order_items','orders.id','=','order_id')
