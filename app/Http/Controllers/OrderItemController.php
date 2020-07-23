@@ -107,9 +107,9 @@ class OrderItemController extends Controller
 
         session([
           'supplierIds' => $supplierIds,
-          'date_from' => $request->date,
-          'date_to' => \Carbon\Carbon::now()->format('Y-m-d'),
-          'keep_selections' => $request->keep_selections,
+          // 'date_from' => $request->date,
+          // 'date_to' => \Carbon\Carbon::now()->format('Y-m-d'),
+          'keep_selections' => session()->get('keep_selections'),
         ]);
 
         return redirect()->back()->with('scrollOffset', $request->scrollOffset);
@@ -185,6 +185,10 @@ class OrderItemController extends Controller
         $order_item->remarks = $request->remarks ? $request->remarks : '';
 
         $order_item->save();
+
+        session([
+          'keep_selections' => session()->get('keep_selections'),
+        ]);
 
         return redirect()->back()->with('scrollOffset', $request->scrollOffset);
     }
