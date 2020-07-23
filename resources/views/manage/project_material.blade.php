@@ -115,10 +115,10 @@
   $table_colspan = 15;
 
   $headers = [
-    '日期' => [ 'width' => 150, 'align' => 'left' ],
-    '供应商' => [ 'width' => 150, 'align' => 'left' ],
+    '日期' => [ 'width' => 120, 'align' => 'left' ],
+    '供应商' => [ 'width' => 120, 'align' => 'left' ],
     '货单号码' => [ 'width' => 120, 'align' => 'left' ],
-    '货名' => [ 'width' => 250, 'align' => 'left' ],
+    '货名' => [ 'width' => 220, 'align' => 'left' ],
     '退' => [ 'width' => 40 ],
     '数量' => [ 'width' => 100 ],
     '价格' => [ 'width' => 80 ],
@@ -127,8 +127,8 @@
     '退货' => [ 'width' => 80 ],
     '总数' => [ 'width' => 100 ],
     '总结' => [ 'width' => 80 ],
-    '记录表' => [ 'width' => 120 ],
-    '操作' => [ 'width' => 100 ],
+    '记录表' => [ 'width' => 100 ],
+    '操作' => [ 'width' => 120 ],
   ];
 
   $gap_color = 'table-secondary';
@@ -146,11 +146,13 @@
     padding-top: 0px;
     padding-bottom: 0px;
     border: 2px solid #6099ee;
+
   }
 
-  #orderTable td
+  #orderTable td, #orderTable td input,  #orderTable td select
   {
-    font-size: 12px;
+    font-size: 14px;
+    font-weight: bold;
   }
 
   #orderTable .project-name
@@ -160,9 +162,16 @@
 
   #orderTable .table-headers
   {
-    font-size: 12px;
+    font-size: 14px;
     background: #6099ee;
     color: white;
+  }
+
+  .btn-link
+  {
+    color: black;
+    font-size: 15px !important;
+    font-weight: bold;
   }
 </style>
 
