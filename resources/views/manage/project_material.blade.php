@@ -115,12 +115,12 @@
   $table_colspan = 15;
 
   $headers = [
-    '日期' => [ 'width' => 120, 'align' => 'left' ],
-    '供应商' => [ 'width' => 120, 'align' => 'left' ],
-    '货单号码' => [ 'width' => 120, 'align' => 'left' ],
-    '货名' => [ 'width' => 220, 'align' => 'left' ],
+    '日期' => [ 'width' => 100, 'align' => 'left' ],
+    '供应商' => [ 'width' => 140, 'align' => 'left' ],
+    '货单号码' => [ 'width' => 80, 'align' => 'left' ],
+    '货名' => [ 'width' => 180, 'align' => 'left' ],
     '退' => [ 'width' => 40 ],
-    '数量' => [ 'width' => 100 ],
+    '数量' => [ 'width' => 60 ],
     '价格' => [ 'width' => 80 ],
     '总价格' => [ 'width' => 100 ],
     'SST 银额' => [ 'colspan' => 2, 'width' => 120 ],
@@ -143,16 +143,14 @@
 
   #orderTable td, #orderTable th
   {
-    padding-top: 0px;
-    padding-bottom: 0px;
+    font-size: 12px;
     border: 2px solid #6099ee;
-
   }
 
   #orderTable td, #orderTable td input,  #orderTable td select
   {
-    font-size: 14px;
-    font-weight: bold;
+    font-size: 12px;
+    /*font-weight: bold;*/
   }
 
   #orderTable .project-name
@@ -162,7 +160,7 @@
 
   #orderTable .table-headers
   {
-    font-size: 14px;
+    font-size: 12px;
     background: #6099ee;
     color: white;
   }
@@ -170,8 +168,8 @@
   .btn-link
   {
     color: black;
-    font-size: 15px !important;
-    font-weight: bold;
+    font-size: 13px !important;
+    /*font-weight: bold;*/
   }
 </style>
 
@@ -262,17 +260,17 @@
         @endphp
         <tr>
           <td>
-            <input name="date" type="date" class="form-control form-control-sm" value="{{ $today }}" form="createForm{{$id}}" required>
+            <input style="max-width: 130px;" name="date" type="date" class="form-control form-control-sm" value="{{ Session::get("date$id") ? Session::get("date$id") : $today }}" form="createForm{{$id}}" required>
           </td>
           <td>
             <select id="supplier_id{{ $id }}" name="supplier_id" class="form-control form-control-sm" form="createForm{{$id}}">
               @foreach ($project->suppliers as $supplier)
-              <option value="{{ $supplier->id }}">{{ $supplier->name }}</option>
+              <option value="{{ $supplier->id }}" @if (Session::get("supplier_id$id") == $supplier->id) selected @endif>{{ $supplier->name }}</option>
               @endforeach
             </select>
           </td>
           <td>
-            <input name="ref_no" type="text" class="form-control form-control-sm" form="createForm{{$id}}" required>
+            <input name="ref_no" value="{{ Session::get("ref_no$id") }}" type="text" class="form-control form-control-sm" form="createForm{{$id}}" required>
           </td>
           <td>
             <input name="item_name" type="text" class="form-control form-control-sm" form="createForm{{$id}}" required>
@@ -332,9 +330,12 @@
 @endforeach
 
 <script>
+  $('td, th').addClass('align-middle');
+
   $(window).scroll(function() {
       $('#scrollOffset').val($(document).scrollTop());
   });
+
 
   // scrollOffset would be set once the createForm is submitted.
   // It is for auto-scroll to the previous position before the page was reloaded.
@@ -375,6 +376,7 @@
     <form id="editForm${id}" action="/order_items/${id}" method="POST">
       @csrf
       @method('PUT')
+      <input type="hidden" name="project_id" value="${project_id}" form="editForm${id}">
       <input id="scrollOffset" type="hidden" name="scrollOffset" form="editForm${id}">
     </form>
     `);

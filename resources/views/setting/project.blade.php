@@ -207,31 +207,31 @@
 
   var suppliers = {{ ProjectController::jsProjectSupplierIdDict() }};
 
-  var customers = {
-    @foreach ($customers as $customer)
-      {{$customer->name}}: {
-        contact: '{{$customer->contact}}',
-        fax: '{{$customer->fax}}',
-        email: '{{$customer->email}}'
-      },
-    @endforeach
-  };
+  // var customers = {
+  //   @foreach ($customers as $customer)
+  //     {{$customer->name}}: {
+  //       contact: '{{$customer->contact}}',
+  //       fax: '{{$customer->fax}}',
+  //       email: '{{$customer->email}}'
+  //     },
+  //   @endforeach
+  // };
 
-  function autoComplete()
-  {
-    var name = $('#customer_name').val();
+  // function autoComplete()
+  // {
+  //   var name = $('#customer_name').val();
 
-    $('#contact').val('');
-    $('#fax').val('');
-    $('#email').val('');
+  //   $('#contact').val('');
+  //   $('#fax').val('');
+  //   $('#email').val('');
 
-    if (customers[name])
-    {
-      $('#contact').val(customers[name].contact);
-      $('#fax').val(customers[name].fax);
-      $('#email').val(customers[name].email);
-    }
-  }
+  //   if (customers[name])
+  //   {
+  //     $('#contact').val(customers[name].contact);
+  //     $('#fax').val(customers[name].fax);
+  //     $('#email').val(customers[name].email);
+  //   }
+  // }
 
   var idToEdit;
 

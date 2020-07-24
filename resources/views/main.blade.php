@@ -14,10 +14,10 @@
 
     <title>Padu Intan</title>
 
-    <link rel="stylesheet" href="{{ asset('css/app.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/main.css') }}">
-    <script src="{{ asset('js/app.js') }}"></script>
-    <script src="{{ asset('js/main.js') }}"></script>
+    <link rel="stylesheet" href="{{ asset('public/css/app.css') }}">
+    <link rel="stylesheet" href="{{ asset('public/css/main.css') }}">
+    <script src="{{ asset('public/js/app.js') }}"></script>
+    <script src="{{ asset('public/js/main.js') }}"></script>
   </head>
 
   <body>
@@ -73,7 +73,7 @@
 
     <div class="p-3 container-fluid text-center">
       @isset($user)
-      <div class="m-3 h1">{{ $title }}</div>
+      <div class="m-3 h3">{{ $title }}</div>
       @endisset
 
       <div class="">

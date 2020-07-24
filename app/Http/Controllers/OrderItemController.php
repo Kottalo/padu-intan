@@ -102,15 +102,20 @@ class OrderItemController extends Controller
 
         $order_item->save();
 
-        $supplierIds = session()->get('supplierIds');
+        $supplierIds = session()->get('supplierIds') ? session()->get('supplierIds') : [];
         if (!array_search($supplier_id, $supplierIds)) array_push($supplierIds, $supplier_id);
 
         session([
           'supplierIds' => $supplierIds,
+          "date$project_id" => $date,
+          "supplier_id$project_id" => $supplier_id,
+          "ref_no$project_id" => $ref_no,
           // 'date_from' => $request->date,
           // 'date_to' => \Carbon\Carbon::now()->format('Y-m-d'),
           'keep_selections' => session()->get('keep_selections'),
         ]);
+        
+        
 
         return redirect()->back()->with('scrollOffset', $request->scrollOffset);
     }
@@ -146,9 +151,13 @@ class OrderItemController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $date = $request->date;
+        $ref_no = $request->ref_no;
+        $project_id = $request->project_id;
+        $supplier_id = $request->supplier_id;
         $item_name = $request->item_name;
-        $price = $request->price;
         $unit_name = $request->unit_name;
+        $price = $request->price;
 
         $item = Item::where([
             'name' => $item_name,
@@ -173,9 +182,31 @@ class OrderItemController extends Controller
             $unit->name = $unit_name;
             $unit->save();
         }
+        
+        $order = Order::where([
+            'date' => $date,
+            'ref_no' => $ref_no,
+            'project_id' => $project_id,
+            'supplier_id' => $supplier_id,
+        ])->first();
+
+        if (!$order)
+        {
+            $order = new Order;
+
+            $order->date = $request->date;
+            $order->ref_no = $ref_no;
+            $order->project_id = $project_id;
+            $order->supplier_id = $supplier_id;
+
+            $order->save();
+        }
+
+        $order_id = $order->id;
 
         $order_item = OrderItem::find($id);
 
+        $order_item->order_id = $order_id;
         $order_item->item_id = $item->id;
         $order_item->return = $request->return ? 1 : 0;
         $order_item->quantity = $request->quantity;
