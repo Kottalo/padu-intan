@@ -4,6 +4,7 @@
   use Carbon\Carbon;
 
   $projects = App\Models\Project::get();
+  $suppliers = Session::get('suppliers');
 
   $today = Carbon::now()->format('Y-m-d');
 @endphp
@@ -30,6 +31,11 @@
           <div class="input-group mb-3 px-0 col">
             <div class="container-fluid pl-0">
               <select id="supplierIds" name="supplierIds[]" class="custom-select ml-0" multiple="multiple">
+                @if ($suppliers)
+                  @foreach ($suppliers as $supplier)
+                  <option value="{{ $supplier->id }}">{{ $supplier->name }}</option>
+                  @endforeach
+                @endif
               </select>
             </div>
           </div>
@@ -49,7 +55,10 @@
             $('#projectIds').multiselect('select', [{{ join(',', Session::has('projectIds') ? Session::get('projectIds') : [] ) }}]);
 
             supplierIds = [{{ join(',', Session::has('supplierIds') ? Session::get('supplierIds') : [] ) }}];
+            
+            $('#supplierIds').multiselect('select', supplierIds);
         }
+        
       </script>
 
 @php
@@ -260,7 +269,7 @@
         @endphp
         <tr>
           <td>
-            <input style="max-width: 130px;" name="date" type="date" class="form-control form-control-sm" value="{{ Session::get("date$id") ? Session::get("date$id") : $today }}" form="createForm{{$id}}" required>
+            <input style="max-width: 150px;" name="date" type="date" class="form-control form-control-sm" value="{{ Session::get("date$id") ? Session::get("date$id") : $today }}" form="createForm{{$id}}" required>
           </td>
           <td>
             <select id="supplier_id{{ $id }}" name="supplier_id" class="form-control form-control-sm" form="createForm{{$id}}">

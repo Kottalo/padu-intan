@@ -264,9 +264,14 @@ class OrderItemController extends Controller
                 round2( SUM( (order_items.quantity * CASE WHEN `return` THEN -order_items.price ELSE order_items.price END) +
                 ( order_items.quantity * CASE WHEN `return` THEN -order_items.price ELSE order_items.price END * sst_perc )) ) AS sub_total")
                 ->join('order_items','orders.id','=','order_items.order_id')
+                ->join('suppliers','orders.supplier_id','=','suppliers.id')
                 ->groupBy('orders.id')
                 ->whereIn('supplier_id', collect($supplierIds))
-                ->whereBetween('date', [$date_from, $date_to]);
+                ->whereBetween('date', [$date_from, $date_to])
+                ->orderBy('orders.date')
+                ->orderBy('suppliers.name')
+                ->orderBy('orders.ref_no')
+                ->orderBy('order_items.id');
             },
             'orders.order_items' => function($query)
             {
@@ -310,6 +315,7 @@ class OrderItemController extends Controller
             }
         )
         ->groupBy('projects.id')
+        ->orderBy('projects.name')
         ->get();
     }
 }

@@ -62,7 +62,6 @@ var projectMultiSelectConfig = {
         $("#supplierIds").append(o);
       });
       $('#supplierIds').multiselect('rebuild');
-      $('#supplierIds').multiselect('select', supplierIds);
     });
 
     if (options.length === 0)
