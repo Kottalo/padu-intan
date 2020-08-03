@@ -6,7 +6,7 @@
       </template>
 
       <template v-if="create_mode || edit_mode">
-        <input type="date" v-model="date">
+        <input type="date" v-model="date" style="max-width: 100%">
       </template>
     </td>
 
@@ -17,7 +17,7 @@
 
       <template v-if="create_mode || edit_mode">
         <select
-          v-model="supplier_id"
+          v-model="supplier_id" style="max-width: 100%"
         >
           <option v-for="supplier in suppliers" :value="supplier.id">{{ supplier.name }}</option>
         </select>
@@ -33,6 +33,7 @@
         <input
           type="text"
           v-model="ref_no"
+          style="max-width: 100%"
         >
       </template>
     </td>
@@ -46,12 +47,13 @@
         <input
           class="ma-0 pa-0"
           v-model="item_name"
+          style="max-width: 100%"
         >
       </template>
     </td>
 
     <td class="text-left pt-1 pl-2">
-      <input class="" v-model="Return" type="checkbox" :checked="order_item ? order_item.return : false" aria-label="Checkbox for following text input">
+      <input class="" v-model="Return" style="max-width: 100%" type="checkbox" :checked="order_item ? order_item.return : false" aria-label="Checkbox for following text input">
     </td>
 
     <td>
@@ -63,6 +65,7 @@
         <input
           class="ma-0 pa-0"
           v-model="quantity"
+          style="max-width: 100%"
         >
       </template>
     </td>
@@ -76,6 +79,7 @@
         <input
           class="ma-0 pa-0"
           v-model="price"
+          style="max-width: 100%"
         >
       </template>
     </td>
@@ -148,6 +152,7 @@
         <input
           class="ma-0 pa-0"
           v-model="remarks"
+          style="max-width: 100%"
         >
       </template>
     </td>

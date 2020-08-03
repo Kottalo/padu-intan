@@ -59,8 +59,20 @@
     </v-container>
 
     <div class="px-1">
-      <table class="table table-sm table-bordered table-hover bg-white">
-        <tbody>
+      <!--<table class="table table-sm table-bordered table-hover bg-white">-->
+      <table>
+        <thead style="border-width: 0px">
+          <tr style="border-width: 0px">
+            <th
+              v-for="header in headers"
+              :colspan="header.colspan ? header.colspan : ''"
+              :style="{width: header.width+'%'}"
+              style="border-width: 0px"
+            ></th>
+          </tr>
+        </thead>
+        
+        <tbody class="table table-sm table-bordered table-hover bg-white">
           <template v-for="project in items">
             <tr>
               <th class="project-name" :colspan="cols">{{ project.name }}</th>
@@ -135,20 +147,20 @@
       accumulator: {},
       cols: 15,
       headers: [
-        { title: '日期' },
-        { title: '供应商' },
-        { title: '货单号码' },
-        { title: '货名' },
-        { title: '退' },
-        { title: '数量' },
-        { title: '价格' },
-        { title: '总价格' },
-        { title: 'SST 银额', colspan: 2 },
-        { title: '退货' },
-        { title: '总数' },
-        { title: '总结' },
-        { title: '记录表' },
-        { title: '操作' },
+        { title: '日期', width: 8 },
+        { title: '供应商', width: 8 },
+        { title: '货单号码', width: 8 },
+        { title: '货名', width: 8 },
+        { title: '退', width: 8 },
+        { title: '数量', width: 8 },
+        { title: '价格', width: 8 },
+        { title: '总价格', width: 8 },
+        { title: 'SST 银额', colspan: 2, width: 8 },
+        { title: '退货', width: 8 },
+        { title: '总数', width: 8 },
+        { title: '总结', width: 8 },
+        { title: '记录表', width: 8 },
+        { title: '操作', width: 8 },
       ],
 
       projects: [],

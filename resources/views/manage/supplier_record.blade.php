@@ -5,7 +5,7 @@
     <project-material></project-material>
   </div>
 
-  <script src="{{ asset('js/vue.js') }}">
+  <script src="{{ asset('public/js/vue.js') }}">
 
   </script>
 @endsection

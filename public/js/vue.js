@@ -340,6 +340,11 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: {
     dataMode: Boolean,
@@ -562,40 +567,66 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
       accumulator: {},
       cols: 15,
       headers: [{
-        title: '日期'
+        title: '日期',
+        width: 8
       }, {
-        title: '供应商'
+        title: '供应商',
+        width: 8
       }, {
-        title: '货单号码'
+        title: '货单号码',
+        width: 8
       }, {
-        title: '货名'
+        title: '货名',
+        width: 8
       }, {
-        title: '退'
+        title: '退',
+        width: 8
       }, {
-        title: '数量'
+        title: '数量',
+        width: 8
       }, {
-        title: '价格'
+        title: '价格',
+        width: 8
       }, {
-        title: '总价格'
+        title: '总价格',
+        width: 8
       }, {
         title: 'SST 银额',
-        colspan: 2
+        colspan: 2,
+        width: 8
       }, {
-        title: '退货'
+        title: '退货',
+        width: 8
       }, {
-        title: '总数'
+        title: '总数',
+        width: 8
       }, {
-        title: '总结'
+        title: '总结',
+        width: 8
       }, {
-        title: '记录表'
+        title: '记录表',
+        width: 8
       }, {
-        title: '操作'
+        title: '操作',
+        width: 8
       }],
       projects: [],
       suppliers: [],
@@ -1928,6 +1959,7 @@ var render = function() {
                     expression: "date"
                   }
                 ],
+                staticStyle: { "max-width": "100%" },
                 attrs: { type: "date" },
                 domProps: { value: _vm.date },
                 on: {
@@ -1972,6 +2004,7 @@ var render = function() {
                       expression: "supplier_id"
                     }
                   ],
+                  staticStyle: { "max-width": "100%" },
                   on: {
                     change: function($event) {
                       var $$selectedVal = Array.prototype.filter
@@ -2024,6 +2057,7 @@ var render = function() {
                     expression: "ref_no"
                   }
                 ],
+                staticStyle: { "max-width": "100%" },
                 attrs: { type: "text" },
                 domProps: { value: _vm.ref_no },
                 on: {
@@ -2061,6 +2095,7 @@ var render = function() {
                   }
                 ],
                 staticClass: "ma-0 pa-0",
+                staticStyle: { "max-width": "100%" },
                 domProps: { value: _vm.item_name },
                 on: {
                   input: function($event) {
@@ -2087,6 +2122,7 @@ var render = function() {
             expression: "Return"
           }
         ],
+        staticStyle: { "max-width": "100%" },
         attrs: {
           type: "checkbox",
           "aria-label": "Checkbox for following text input"
@@ -2147,6 +2183,7 @@ var render = function() {
                   }
                 ],
                 staticClass: "ma-0 pa-0",
+                staticStyle: { "max-width": "100%" },
                 domProps: { value: _vm.quantity },
                 on: {
                   input: function($event) {
@@ -2186,6 +2223,7 @@ var render = function() {
                   }
                 ],
                 staticClass: "ma-0 pa-0",
+                staticStyle: { "max-width": "100%" },
                 domProps: { value: _vm.price },
                 on: {
                   input: function($event) {
@@ -2352,6 +2390,7 @@ var render = function() {
                   }
                 ],
                 staticClass: "ma-0 pa-0",
+                staticStyle: { "max-width": "100%" },
                 domProps: { value: _vm.remarks },
                 on: {
                   input: function($event) {
@@ -2680,184 +2719,198 @@ var render = function() {
       ),
       _vm._v(" "),
       _c("div", { staticClass: "px-1" }, [
-        _c(
-          "table",
-          { staticClass: "table table-sm table-bordered table-hover bg-white" },
-          [
+        _c("table", [
+          _c("thead", { staticStyle: { "border-width": "0px" } }, [
             _c(
-              "tbody",
-              [
-                _vm._l(_vm.items, function(project) {
-                  return [
-                    _c("tr", [
-                      _c(
+              "tr",
+              { staticStyle: { "border-width": "0px" } },
+              _vm._l(_vm.headers, function(header) {
+                return _c("th", {
+                  staticStyle: { "border-width": "0px" },
+                  style: { width: header.width + "%" },
+                  attrs: { colspan: header.colspan ? header.colspan : "" }
+                })
+              }),
+              0
+            )
+          ]),
+          _vm._v(" "),
+          _c(
+            "tbody",
+            {
+              staticClass: "table table-sm table-bordered table-hover bg-white"
+            },
+            [
+              _vm._l(_vm.items, function(project) {
+                return [
+                  _c("tr", [
+                    _c(
+                      "th",
+                      {
+                        staticClass: "project-name",
+                        attrs: { colspan: _vm.cols }
+                      },
+                      [_vm._v(_vm._s(project.name))]
+                    )
+                  ]),
+                  _vm._v(" "),
+                  _c(
+                    "tr",
+                    { staticClass: "table-headers" },
+                    _vm._l(_vm.headers, function(header) {
+                      return _c(
                         "th",
                         {
-                          staticClass: "project-name",
-                          attrs: { colspan: _vm.cols }
+                          attrs: {
+                            colspan: header.colspan ? header.colspan : ""
+                          }
                         },
-                        [_vm._v(_vm._s(project.name))]
+                        [_vm._v(_vm._s(header.title))]
                       )
-                    ]),
-                    _vm._v(" "),
-                    _c(
-                      "tr",
-                      { staticClass: "table-headers" },
-                      _vm._l(_vm.headers, function(header) {
-                        return _c(
+                    }),
+                    0
+                  ),
+                  _vm._v(" "),
+                  _vm._l(project.orders, function(order) {
+                    return [
+                      _vm._l(order.order_items, function(order_item) {
+                        return _c("OrderItemDataRow", {
+                          key: "o" + order_item.id,
+                          attrs: {
+                            projectId: order.project_id,
+                            dataMode: "",
+                            orderItem: order_item,
+                            accumulator: _vm.accumulator[order_item.id]
+                          }
+                        })
+                      }),
+                      _vm._v(" "),
+                      _c("tr", [
+                        _c(
                           "th",
                           {
-                            attrs: {
-                              colspan: header.colspan ? header.colspan : ""
-                            }
+                            staticClass: "text-right",
+                            attrs: { colspan: "7" }
                           },
-                          [_vm._v(_vm._s(header.title))]
-                        )
-                      }),
-                      0
+                          [_vm._v("Total")]
+                        ),
+                        _vm._v(" "),
+                        _c(
+                          "th",
+                          {
+                            staticClass: "text-right",
+                            class: { "text-danger": order.total_price < 0 }
+                          },
+                          [_vm._v(_vm._s(order.total_price))]
+                        ),
+                        _vm._v(" "),
+                        _c("th"),
+                        _vm._v(" "),
+                        _c(
+                          "th",
+                          {
+                            staticClass: "text-right",
+                            class: { "text-danger": order.total_price < 0 }
+                          },
+                          [_vm._v(_vm._s(order.sst_amount))]
+                        ),
+                        _vm._v(" "),
+                        _c("th"),
+                        _vm._v(" "),
+                        _c(
+                          "th",
+                          {
+                            staticClass: "text-right",
+                            class: { "text-danger": order.sub_total < 0 }
+                          },
+                          [_vm._v(_vm._s(order.sub_total))]
+                        ),
+                        _vm._v(" "),
+                        _c("th"),
+                        _vm._v(" "),
+                        _c("th"),
+                        _vm._v(" "),
+                        _c("th")
+                      ]),
+                      _vm._v(" "),
+                      _c("tr", [
+                        _c("td", {
+                          staticClass: "table-gap",
+                          staticStyle: { height: "20px" },
+                          attrs: { colspan: _vm.cols }
+                        })
+                      ])
+                    ]
+                  }),
+                  _vm._v(" "),
+                  _c("tr", [
+                    _c(
+                      "th",
+                      { staticClass: "text-right", attrs: { colspan: "7" } },
+                      [_vm._v("Sub Total")]
                     ),
                     _vm._v(" "),
-                    _vm._l(project.orders, function(order) {
-                      return [
-                        _vm._l(order.order_items, function(order_item) {
-                          return _c("OrderItemDataRow", {
-                            key: "o" + order_item.id,
-                            attrs: {
-                              projectId: order.project_id,
-                              dataMode: "",
-                              orderItem: order_item,
-                              accumulator: _vm.accumulator[order_item.id]
-                            }
-                          })
-                        }),
-                        _vm._v(" "),
-                        _c("tr", [
-                          _c(
-                            "th",
-                            {
-                              staticClass: "text-right",
-                              attrs: { colspan: "7" }
-                            },
-                            [_vm._v("Total")]
-                          ),
-                          _vm._v(" "),
-                          _c(
-                            "th",
-                            {
-                              staticClass: "text-right",
-                              class: { "text-danger": order.total_price < 0 }
-                            },
-                            [_vm._v(_vm._s(order.total_price))]
-                          ),
-                          _vm._v(" "),
-                          _c("th"),
-                          _vm._v(" "),
-                          _c(
-                            "th",
-                            {
-                              staticClass: "text-right",
-                              class: { "text-danger": order.total_price < 0 }
-                            },
-                            [_vm._v(_vm._s(order.sst_amount))]
-                          ),
-                          _vm._v(" "),
-                          _c("th"),
-                          _vm._v(" "),
-                          _c(
-                            "th",
-                            {
-                              staticClass: "text-right",
-                              class: { "text-danger": order.sub_total < 0 }
-                            },
-                            [_vm._v(_vm._s(order.sub_total))]
-                          ),
-                          _vm._v(" "),
-                          _c("th"),
-                          _vm._v(" "),
-                          _c("th"),
-                          _vm._v(" "),
-                          _c("th")
-                        ]),
-                        _vm._v(" "),
-                        _c("tr", [
-                          _c("td", {
-                            staticClass: "table-gap",
-                            staticStyle: { height: "20px" },
-                            attrs: { colspan: _vm.cols }
-                          })
-                        ])
-                      ]
-                    }),
+                    _c(
+                      "th",
+                      {
+                        staticClass: "text-right",
+                        class: { "text-danger": project.total_price < 0 }
+                      },
+                      [_vm._v(_vm._s(project.total_price))]
+                    ),
                     _vm._v(" "),
-                    _c("tr", [
-                      _c(
-                        "th",
-                        { staticClass: "text-right", attrs: { colspan: "7" } },
-                        [_vm._v("Sub Total")]
-                      ),
-                      _vm._v(" "),
-                      _c(
-                        "th",
-                        {
-                          staticClass: "text-right",
-                          class: { "text-danger": project.total_price < 0 }
-                        },
-                        [_vm._v(_vm._s(project.total_price))]
-                      ),
-                      _vm._v(" "),
-                      _c("th"),
-                      _vm._v(" "),
-                      _c(
-                        "th",
-                        {
-                          staticClass: "text-right",
-                          class: { "text-danger": project.sst_amount < 0 }
-                        },
-                        [_vm._v(_vm._s(project.sst_amount))]
-                      ),
-                      _vm._v(" "),
-                      _c("th"),
-                      _vm._v(" "),
-                      _c(
-                        "th",
-                        {
-                          staticClass: "text-right",
-                          class: { "text-danger": project.sub_total < 0 }
-                        },
-                        [_vm._v(_vm._s(project.sub_total))]
-                      ),
-                      _vm._v(" "),
-                      _c("th"),
-                      _vm._v(" "),
-                      _c("th"),
-                      _vm._v(" "),
-                      _c("th")
-                    ]),
+                    _c("th"),
                     _vm._v(" "),
-                    _c("OrderItemDataRow", {
-                      key: "p" + project.id,
-                      attrs: { projectId: project.id, createMode: "" },
-                      on: {
-                        update: function($event) {
-                          return _vm.getItems()
-                        }
+                    _c(
+                      "th",
+                      {
+                        staticClass: "text-right",
+                        class: { "text-danger": project.sst_amount < 0 }
+                      },
+                      [_vm._v(_vm._s(project.sst_amount))]
+                    ),
+                    _vm._v(" "),
+                    _c("th"),
+                    _vm._v(" "),
+                    _c(
+                      "th",
+                      {
+                        staticClass: "text-right",
+                        class: { "text-danger": project.sub_total < 0 }
+                      },
+                      [_vm._v(_vm._s(project.sub_total))]
+                    ),
+                    _vm._v(" "),
+                    _c("th"),
+                    _vm._v(" "),
+                    _c("th"),
+                    _vm._v(" "),
+                    _c("th")
+                  ]),
+                  _vm._v(" "),
+                  _c("OrderItemDataRow", {
+                    key: "p" + project.id,
+                    attrs: { projectId: project.id, createMode: "" },
+                    on: {
+                      update: function($event) {
+                        return _vm.getItems()
                       }
-                    }),
-                    _vm._v(" "),
-                    _c("tr", [
-                      _c("td", {
-                        staticClass: "table-gap",
-                        staticStyle: { height: "20px" },
-                        attrs: { colspan: _vm.cols }
-                      })
-                    ])
-                  ]
-                })
-              ],
-              2
-            )
-          ]
-        )
+                    }
+                  }),
+                  _vm._v(" "),
+                  _c("tr", [
+                    _c("td", {
+                      staticClass: "table-gap",
+                      staticStyle: { height: "20px" },
+                      attrs: { colspan: _vm.cols }
+                    })
+                  ])
+                ]
+              })
+            ],
+            2
+          )
+        ])
       ])
     ],
     1
@@ -59043,7 +59096,7 @@ var app = new vue__WEBPACK_IMPORTED_MODULE_0___default.a({
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! C:\Users\Corthallo\Desktop\Projects\Laravel\padu-intan\resources\js\vue.js */"./resources/js/vue.js");
+module.exports = __webpack_require__(/*! /home/padu/public_html/resources/js/vue.js */"./resources/js/vue.js");
 
 
 /***/ })
