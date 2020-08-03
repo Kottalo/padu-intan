@@ -55,10 +55,10 @@
             $('#projectIds').multiselect('select', [{{ join(',', Session::has('projectIds') ? Session::get('projectIds') : [] ) }}]);
 
             supplierIds = [{{ join(',', Session::has('supplierIds') ? Session::get('supplierIds') : [] ) }}];
-            
+
             $('#supplierIds').multiselect('select', supplierIds);
         }
-        
+
       </script>
 
 @php

@@ -57,7 +57,7 @@
 
             <div class="col-md-{{ $formCols[1] }}">
               <input id="start_on" name="start_on" type="date" class="form-control" {{-- value="{{ Carbon::now()->format("Y-m-d") }}" --}}
-              required autocomplete="current-password">
+              autocomplete="current-password">
             </div>
           </div>
 
@@ -66,7 +66,7 @@
 
             <div class="col-md-{{ $formCols[1] }}">
               <input id="end_on" name="end_on" type="date" class="form-control" {{-- value="{{ Carbon::now()->format("Y-m-d") }}" --}}
-              required autocomplete="current-password">
+              autocomplete="current-password">
             </div>
           </div>
 
@@ -74,7 +74,7 @@
             <label for="cost" class="col-md-{{ $formCols[0] }} col-form-label text-md-right">工程数额</label>
 
             <div class="col-md-{{ $formCols[1] }}">
-              <input id="cost" name="cost" type="text" class="form-control pos-number-dot" required>
+              <input id="cost" name="cost" type="text" class="form-control pos-number-dot">
             </div>
           </div>
 
@@ -92,7 +92,7 @@
             <label for="customer_name" class="col-md-{{ $formCols[0] }} col-form-label text-md-right">联络人</label>
 
             <div class="col-md-{{ $formCols[1] }}">
-              <input id="customer_name" name="customer_name" type="text" class="form-control" oninput="autoComplete();" required>
+              <input id="customer_name" name="customer_name" type="text" class="form-control" required>
             </div>
           </div>
 

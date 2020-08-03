@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use DB;
 use App\Models\{ Project, Order, Item, OrderItem, Unit, Supplier };
+use Carbon\Carbon;
 
 class OrderItemController extends Controller
 {
@@ -102,22 +103,7 @@ class OrderItemController extends Controller
 
         $order_item->save();
 
-        $supplierIds = session()->get('supplierIds') ? session()->get('supplierIds') : [];
-        if (!array_search($supplier_id, $supplierIds)) array_push($supplierIds, $supplier_id);
-
-        session([
-          'supplierIds' => $supplierIds,
-          "date$project_id" => $date,
-          "supplier_id$project_id" => $supplier_id,
-          "ref_no$project_id" => $ref_no,
-          // 'date_from' => $request->date,
-          // 'date_to' => \Carbon\Carbon::now()->format('Y-m-d'),
-          'keep_selections' => session()->get('keep_selections'),
-        ]);
-        
-        
-
-        return redirect()->back()->with('scrollOffset', $request->scrollOffset);
+        return 1;
     }
 
     /**
@@ -182,7 +168,7 @@ class OrderItemController extends Controller
             $unit->name = $unit_name;
             $unit->save();
         }
-        
+
         $order = Order::where([
             'date' => $date,
             'ref_no' => $ref_no,
@@ -235,23 +221,21 @@ class OrderItemController extends Controller
         OrderItem::destroy($id);
     }
 
-    public function getItems(Request $request)
+    public static function getItems(Request $request)
     {
-        session([
-          'projectIds' => $request->projectIds,
-          'supplierIds' => $request->supplierIds,
-          'date_from' => $request->date_from,
-          'date_to' => $request->date_to,
-          'keep_selections' => $request->keep_selections,
-        ]);
+        $allSupplierIds = [];
 
-        return redirect()->back();
-    }
+        foreach (Supplier::get() as $supplier) {
+            array_push($allSupplierIds, $supplier->id);
+        }
 
-    public static function getItemsByParams($projectIds, $supplierIds, $date_from, $date_to)
-    {
-        if (!$projectIds) $projectIds = [];
-        if (!$supplierIds) $supplierIds = [];
+        $earliestDate = Order::get() ? Order::orderBy('date')->first()->date : Carbon::today()->format('Y-m-d');
+        $lastDate = Order::get() ? Order::orderBy('date')->get()->last()->date : Carbon::today()->format('Y-m-d');
+
+        $projectIds = $request->projectIds;
+        $supplierIds = $request->supplierIds ? $request->supplierIds : $allSupplierIds;
+        $date_from = $request->date_from ? $request->date_from : $earliestDate;
+        $date_to = $request->date_to ? $request->date_to : $lastDate;
 
         $projectId_sql = $projectIds ? '(' . join(',', $projectIds) . ')' : '(0)';
 
@@ -280,7 +264,7 @@ class OrderItemController extends Controller
                 "));
                 $query->selectRaw("*, round2( order_items.price ) AS price,
                 cast((sst_perc * 100) AS char) * 1 AS sst_perc,
-                @total_price:= round2( quantity * price ) AS total_price,
+                @total_price:= round2( quantity * CASE WHEN `return` THEN -price ELSE price END ) AS total_price,
                 @sst_amount:= round2( @total_price * sst_perc ) AS sst_amount,
                 round2( @total_price + @sst_amount ) AS sub_total
                 ");
@@ -291,7 +275,7 @@ class OrderItemController extends Controller
             'orders.supplier',
             'suppliers',
         ])
-        ->selectRaw("projects.id, projects.name")
+        ->selectRaw("projects.id, projects.name, p1.total_price, p1.sst_amount, p1.sub_total")
         ->whereIn('projects.id', collect($projectIds))
         ->leftJoin('orders','projects.id','=','project_id')
         ->leftJoin('order_items','orders.id','=','order_id')

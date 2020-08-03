@@ -48,8 +48,14 @@ Route::middleware(['auth'])->group(function () {
         'order_items' => 'OrderItemController',
     ]);
 
+    Route::prefix('suppliers')->group(function() {
+        Route::post('getSuppliersByProjectId', 'SupplierController@getSuppliersByProjectId');
+        Route::post('getSuppliersByProjectIds', 'SupplierController@getSuppliersByProjectIds');
+    });
+
+
     Route::post('/order_items/getItems', 'OrderItemController@getItems');
-    Route::post('/suppliers/getSuppliersByProjectIds', 'SupplierController@getSuppliersByProjectIds');
+
 });
 
 Auth::routes();

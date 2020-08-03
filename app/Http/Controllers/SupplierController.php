@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use DB;
-use App\Models\Supplier;
+use App\Models\{ Supplier, Project };
 
 class SupplierController extends Controller
 {
@@ -102,6 +102,14 @@ class SupplierController extends Controller
         Supplier::destroy($id);
     }
 
+    public function getSuppliersByProjectId(Request $request)
+    {
+      $suppliers = Project::find($request->project_id)
+      ->suppliers;
+
+      return collect($suppliers);
+    }
+
     public function getSuppliersByProjectIds(Request $request)
     {
         $suppliers = DB::table('suppliers')
@@ -110,18 +118,6 @@ class SupplierController extends Controller
         ->join('orders', 'orders.supplier_id', '=','suppliers.id')
         ->join('projects', 'orders.project_id', '=', 'projects.id')
         ->whereIn('orders.project_id', $request->projectIds)
-        ->get();
-
-        return collect($suppliers);
-    }
-
-    public function getSuppliersWithProjects(Request $request)
-    {
-        $suppliers = DB::table('suppliers')
-        ->distinct()
-        ->selectRaw('suppliers.id, suppliers.name')
-        ->join('orders', 'orders.supplier_id', '=','suppliers.id')
-        ->join('projects', 'orders.project_id', '=', 'projects.id')
         ->get();
 
         return collect($suppliers);

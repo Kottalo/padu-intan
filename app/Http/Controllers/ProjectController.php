@@ -37,7 +37,7 @@ class ProjectController extends Controller
     public function store(Request $request)
     {
         $supplierIds = $request->supplierIds ? $request->supplierIds : [];
-        
+
         $customer_name = $request->customer_name;
 
         $customer = Customer::whereName($customer_name)->first();
@@ -65,6 +65,8 @@ class ProjectController extends Controller
         $project->customer_id = $customer_id;
         $project->address = $request->address;
         $project->remarks = $request->remarks;
+
+        $project->save();
 
         foreach ($supplierIds as $supplierId)
         {
@@ -111,7 +113,7 @@ class ProjectController extends Controller
     public function update(Request $request, $id)
     {
         $supplierIds = $request->supplierIds ? $request->supplierIds : [];
-        
+
         $customer_name = $request->customer_name;
 
         $project = Project::find($id);
