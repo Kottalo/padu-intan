@@ -321,30 +321,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: {
     dataMode: Boolean,
@@ -371,16 +347,42 @@ __webpack_require__.r(__webpack_exports__);
       price: 0,
       sst_perc: 0,
       remarks: '',
-      total_price: 0,
-      sst_amount: 0,
-      sub_total: 0,
       accumulate: this.accumulator
     };
   },
+  computed: {
+    negative: function negative() {
+      return this.Return ? -1 : 1;
+    },
+    total_price: function total_price() {
+      return this.quantity * this.price * this.negative;
+    },
+    sst_amount: function sst_amount() {
+      return this.total_price * this.sst_perc / 100 * this.negative;
+    },
+    sub_total: function sub_total() {
+      return this.total_price + this.sst_amount * this.negative;
+    }
+  },
   created: function created() {
     this.getSuppliers();
+
+    if (this.data_mode) {
+      this.resetData();
+    }
   },
   methods: {
+    resetData: function resetData() {
+      this.date = this.order_item.order.date;
+      this.supplier_id = this.order_item.order.supplier_id;
+      this.ref_no = this.order_item.order.ref_no;
+      this.item_name = this.order_item.item.name;
+      this.Return = this.order_item["return"];
+      this.quantity = this.order_item.quantity;
+      this.price = this.order_item.price;
+      this.sst_perc = this.order_item.sst_perc;
+      this.remarks = this.order_item.remarks;
+    },
     getSuppliers: function getSuppliers() {
       var _this = this;
 
@@ -389,7 +391,8 @@ __webpack_require__.r(__webpack_exports__);
       };
       axios.post('/suppliers/getSuppliersByProjectId', data).then(function (res) {
         _this.suppliers = res.data;
-        _this.supplier_id = _this.suppliers[0] ? _this.suppliers[0].id : '';
+
+        _this.resetData();
       });
     },
     submitForm: function submitForm() {
@@ -418,9 +421,6 @@ __webpack_require__.r(__webpack_exports__);
           _this2.$emit('update');
         });
       }
-    },
-    toEdit: function toEdit() {
-      this.edit_mode = true;
     }
   }
 });
@@ -579,9 +579,27 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
+      deleteDialog: false,
       accumulator: {},
       cols: 15,
       headers: [{
@@ -660,8 +678,21 @@ __webpack_require__.r(__webpack_exports__);
         _this2.suppliers = res.data;
       });
     },
-    getItems: function getItems() {
+    toDelete: function toDelete(id) {
+      this.idToDelete = id;
+      this.deleteDialog = true;
+    },
+    confirmDelete: function confirmDelete() {
       var _this3 = this;
+
+      axios["delete"]('/order_items/' + this.idToDelete).then(function (res) {
+        _this3.deleteDialog = false;
+
+        _this3.getItems();
+      });
+    },
+    getItems: function getItems() {
+      var _this4 = this;
 
       var projectIds = this.projectIds.map(function (value) {
         return value.id;
@@ -676,14 +707,18 @@ __webpack_require__.r(__webpack_exports__);
         date_to: this.date_to
       };
       axios.post('/order_items/getItems', data).then(function (res) {
-        _this3.items = res.data;
-        console.log(res.data);
+        _this4.items = {};
+
+        _this4.$nextTick().then(function () {
+          _this4.items = res.data;
+        });
+
         var acc = 0;
-        _this3.accumulator = {};
+        _this4.accumulator = {};
         res.data.forEach(function (project) {
           project.orders.forEach(function (order) {
             order.order_items.forEach(function (order_item) {
-              _this3.accumulator[order_item.id] = acc += parseFloat(order_item.sub_total);
+              _this4.accumulator[order_item.id] = acc += parseFloat(order_item.sub_total);
             });
           });
         });
@@ -2128,7 +2163,6 @@ var render = function() {
           "aria-label": "Checkbox for following text input"
         },
         domProps: {
-          checked: _vm.order_item ? _vm.order_item.return : false,
           checked: Array.isArray(_vm.Return)
             ? _vm._i(_vm.Return, null) > -1
             : _vm.Return
@@ -2182,7 +2216,7 @@ var render = function() {
                     expression: "quantity"
                   }
                 ],
-                staticClass: "ma-0 pa-0",
+                staticClass: "ma-0 pa-0 text-center",
                 staticStyle: { "max-width": "100%" },
                 domProps: { value: _vm.quantity },
                 on: {
@@ -2202,10 +2236,7 @@ var render = function() {
     _vm._v(" "),
     _c(
       "td",
-      {
-        staticClass: "text-right",
-        class: { "text-danger": _vm.order_item ? _vm.order_item.return : false }
-      },
+      { staticClass: "text-right", class: { "text-danger": _vm.Return } },
       [
         _vm.data_mode && !_vm.edit_mode
           ? [_vm._v("\n      " + _vm._s(_vm.order_item.price) + "\n    ")]
@@ -2222,7 +2253,7 @@ var render = function() {
                     expression: "price"
                   }
                 ],
-                staticClass: "ma-0 pa-0",
+                staticClass: "ma-0 pa-0 text-right",
                 staticStyle: { "max-width": "100%" },
                 domProps: { value: _vm.price },
                 on: {
@@ -2242,31 +2273,15 @@ var render = function() {
     _vm._v(" "),
     _c(
       "td",
-      {
-        staticClass: "text-right",
-        class: { "text-danger": _vm.order_item ? _vm.order_item.return : false }
-      },
-      [
-        _vm.data_mode && !_vm.edit_mode
-          ? [_vm._v("\n      " + _vm._s(_vm.order_item.total_price) + "\n    ")]
-          : _vm._e(),
-        _vm._v(" "),
-        _vm.create_mode || _vm.edit_mode
-          ? [_vm._v("\n      " + _vm._s(_vm.total_price) + "\n    ")]
-          : _vm._e()
-      ],
-      2
+      { staticClass: "text-right", class: { "text-danger": _vm.Return } },
+      [_vm._v("\n    " + _vm._s(_vm.total_price.toFixed(2)) + "\n  ")]
     ),
     _vm._v(" "),
     _c(
       "td",
       {
         staticClass: "text-right",
-        class: {
-          "text-danger": _vm.order_item
-            ? parseInt(_vm.order_item.return)
-            : false
-        },
+        class: { "text-danger": _vm.Return },
         staticStyle: { "max-width": "20px" }
       },
       [
@@ -2304,56 +2319,20 @@ var render = function() {
     _vm._v(" "),
     _c(
       "td",
-      {
-        staticClass: "text-right",
-        class: { "text-danger": _vm.order_item.sst_amount < 0 }
-      },
-      [
-        _vm.data_mode && !_vm.edit_mode
-          ? [_vm._v("\n      " + _vm._s(_vm.order_item.sst_amount) + "\n    ")]
-          : _vm._e(),
-        _vm._v(" "),
-        _vm.create_mode || _vm.edit_mode
-          ? [_vm._v("\n      " + _vm._s(_vm.sst_amount) + "\n    ")]
-          : _vm._e()
-      ],
-      2
+      { staticClass: "text-right", class: { "text-danger": _vm.Return } },
+      [_vm._v("\n    " + _vm._s(_vm.sst_amount.toFixed(2)) + "\n  ")]
     ),
     _vm._v(" "),
     _c(
       "td",
-      {
-        staticClass: "text-right",
-        class: { "text-danger": _vm.order_item.sub_total < 0 }
-      },
-      [
-        _vm.data_mode && !_vm.edit_mode
-          ? [_vm._v("\n      " + _vm._s(_vm.order_item.sub_total) + "\n    ")]
-          : _vm._e(),
-        _vm._v(" "),
-        _vm.create_mode || _vm.edit_mode
-          ? [_vm._v("\n      " + _vm._s(_vm.sub_total) + "\n    ")]
-          : _vm._e()
-      ],
-      2
+      { staticClass: "text-right", class: { "text-danger": _vm.Return } },
+      [_vm._v("\n    " + _vm._s(_vm.sub_total.toFixed(2)) + "\n  ")]
     ),
     _vm._v(" "),
     _c(
       "td",
-      {
-        staticClass: "text-right",
-        class: { "text-danger": _vm.order_item.sub_total < 0 }
-      },
-      [
-        _vm.data_mode && !_vm.edit_mode
-          ? [_vm._v("\n      " + _vm._s(_vm.order_item.sub_total) + "\n    ")]
-          : _vm._e(),
-        _vm._v(" "),
-        _vm.create_mode || _vm.edit_mode
-          ? [_vm._v("\n      " + _vm._s(_vm.sub_total) + "\n    ")]
-          : _vm._e()
-      ],
-      2
+      { staticClass: "text-right", class: { "text-danger": _vm.Return } },
+      [_vm._v("\n    " + _vm._s(_vm.sub_total.toFixed(2)) + "\n  ")]
     ),
     _vm._v(" "),
     _c(
@@ -2364,7 +2343,7 @@ var render = function() {
       },
       [
         _vm.data_mode && !_vm.edit_mode
-          ? [_vm._v("\n      " + _vm._s(_vm.accumulate) + "\n    ")]
+          ? [_vm._v("\n      " + _vm._s(_vm.accumulate.toFixed(2)) + "\n    ")]
           : _vm._e()
       ],
       2
@@ -2430,7 +2409,25 @@ var render = function() {
                   )
                 ]),
                 _vm._v(" "),
-                _vm._m(0)
+                _c("div", { staticClass: "col p-0 m-0 text-left" }, [
+                  _c(
+                    "a",
+                    {
+                      staticClass: "btn btn-sm btn-link py-1 px-2",
+                      staticStyle: { "font-size": "12px", height: "24px" },
+                      attrs: {
+                        "data-toggle": "modal",
+                        "data-target": "#deleteConfirmModal"
+                      },
+                      on: {
+                        click: function($event) {
+                          return _vm.$emit("confirm-delete", _vm.order_item.id)
+                        }
+                      }
+                    },
+                    [_vm._v("删除")]
+                  )
+                ])
               ])
             ]
           : _vm._e(),
@@ -2446,7 +2443,7 @@ var render = function() {
                       staticStyle: { "font-size": "12px", height: "24px" },
                       on: {
                         click: function($event) {
-                          return _vm.toEdit()
+                          return _vm.submitForm()
                         }
                       }
                     },
@@ -2463,6 +2460,7 @@ var render = function() {
                       on: {
                         click: function($event) {
                           _vm.edit_mode = false
+                          _vm.resetData()
                         }
                       }
                     },
@@ -2492,7 +2490,7 @@ var render = function() {
                   )
                 ]),
                 _vm._v(" "),
-                _vm._m(1)
+                _vm._m(0)
               ])
             ]
           : _vm._e()
@@ -2502,25 +2500,6 @@ var render = function() {
   ])
 }
 var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "col p-0 m-0 text-left" }, [
-      _c(
-        "a",
-        {
-          staticClass: "btn btn-sm btn-link py-1 px-2",
-          staticStyle: { "font-size": "12px", height: "24px" },
-          attrs: {
-            "data-toggle": "modal",
-            "data-target": "#deleteConfirmModal"
-          }
-        },
-        [_vm._v("删除")]
-      )
-    ])
-  },
   function() {
     var _vm = this
     var _h = _vm.$createElement
@@ -2781,6 +2760,14 @@ var render = function() {
                             dataMode: "",
                             orderItem: order_item,
                             accumulator: _vm.accumulator[order_item.id]
+                          },
+                          on: {
+                            update: function($event) {
+                              return _vm.getItems()
+                            },
+                            "confirm-delete": function($event) {
+                              return _vm.toDelete($event)
+                            }
                           }
                         })
                       }),
@@ -2911,7 +2898,76 @@ var render = function() {
             2
           )
         ])
-      ])
+      ]),
+      _vm._v(" "),
+      _c(
+        "v-row",
+        { attrs: { justify: "center" } },
+        [
+          _c(
+            "v-dialog",
+            {
+              attrs: { persistent: "", "max-width": "290" },
+              model: {
+                value: _vm.deleteDialog,
+                callback: function($$v) {
+                  _vm.deleteDialog = $$v
+                },
+                expression: "deleteDialog"
+              }
+            },
+            [
+              _c(
+                "v-card",
+                [
+                  _c("v-card-title", { staticClass: "headline" }, [
+                    _vm._v("确定删除")
+                  ]),
+                  _vm._v(" "),
+                  _c("v-card-text", [_vm._v("是否确定删除此货品？")]),
+                  _vm._v(" "),
+                  _c(
+                    "v-card-actions",
+                    [
+                      _c("v-spacer"),
+                      _vm._v(" "),
+                      _c(
+                        "v-btn",
+                        {
+                          attrs: { color: "danger", text: "" },
+                          on: {
+                            click: function($event) {
+                              return _vm.confirmDelete()
+                            }
+                          }
+                        },
+                        [_vm._v("确定")]
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "v-btn",
+                        {
+                          attrs: { color: "secondary", text: "" },
+                          on: {
+                            click: function($event) {
+                              _vm.deleteDialog = false
+                            }
+                          }
+                        },
+                        [_vm._v("取消")]
+                      )
+                    ],
+                    1
+                  )
+                ],
+                1
+              )
+            ],
+            1
+          )
+        ],
+        1
+      )
     ],
     1
   )
@@ -59096,7 +59152,7 @@ var app = new vue__WEBPACK_IMPORTED_MODULE_0___default.a({
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! /home/padu/public_html/resources/js/vue.js */"./resources/js/vue.js");
+module.exports = __webpack_require__(/*! C:\Users\Corthallo\Desktop\Projects\Laravel\padu-intan\resources\js\vue.js */"./resources/js/vue.js");
 
 
 /***/ })

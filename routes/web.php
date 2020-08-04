@@ -53,7 +53,6 @@ Route::middleware(['auth'])->group(function () {
         Route::post('getSuppliersByProjectIds', 'SupplierController@getSuppliersByProjectIds');
     });
 
-
     Route::post('/order_items/getItems', 'OrderItemController@getItems');
 
 });

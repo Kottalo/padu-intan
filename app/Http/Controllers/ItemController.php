@@ -4,9 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-use App\Models\Material;
+use App\Models\Item;
 
-class MaterialController extends Controller
+class ItemController extends Controller
 {
     /**
      * Display a listing of the resource.

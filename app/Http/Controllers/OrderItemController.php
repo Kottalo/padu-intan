@@ -203,11 +203,7 @@ class OrderItemController extends Controller
 
         $order_item->save();
 
-        session([
-          'keep_selections' => session()->get('keep_selections'),
-        ]);
-
-        return redirect()->back()->with('scrollOffset', $request->scrollOffset);
+        return OrderItem::with(['order.supplier', 'item'])->find($id);
     }
 
     /**
@@ -219,6 +215,8 @@ class OrderItemController extends Controller
     public function destroy($id)
     {
         OrderItem::destroy($id);
+
+        return 1;
     }
 
     public static function getItems(Request $request)
