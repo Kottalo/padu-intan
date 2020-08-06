@@ -51,7 +51,7 @@
           <v-row>
             <v-btn
               block
-              @click="getItems()"
+              @click="getItems();deleteDialog = true"
             >提交</v-btn>
           </v-row>
         </v-col>
@@ -71,7 +71,7 @@
           </tr>
         </thead>
 
-        <tbody id="orderTable" class="table table-sm table-bordered table-hover bg-white">
+        <tbody id="supplierRecordTable" class="table table-sm table-bordered table-hover bg-white">
           <template v-for="project in items">
             <tr>
               <th class="project-name" :colspan="cols">{{ project.name }}</th>
@@ -157,14 +157,14 @@
       headers: [
         { title: '日期', width: 8 },
         { title: '供应商', width: 8 },
+        { title: '工程', width: 8 },
         { title: '货单号码', width: 8 },
-        { title: '货名', width: 8 },
-        { title: '退', width: 8 },
-        { title: '数量', width: 8 },
-        { title: '价格', width: 8 },
-        { title: '总价格', width: 8 },
-        { title: 'SST 银额', colspan: 2, width: 8 },
-        { title: '退货', width: 8 },
+        { title: '总数', width: 8 },
+        { title: '总结', width: 8 },
+        { title: '支银单号码', width: 8 },
+        { title: '银行编号码', width: 8 },
+        { title: '出支票', width: 8 },
+        { title: '转账', width: 8 },
         { title: '总数', width: 8 },
         { title: '总结', width: 8 },
         { title: '记录表', width: 8 },
@@ -231,7 +231,7 @@
           this.$nextTick()
           .then(() => {
             this.items = res.data;
-          })
+          });
 
           var acc = 0;
           this.accumulator = {};
@@ -250,24 +250,24 @@
 </script>
 
 <style>
-#orderTable
+#supplierRecordTable
 {
   font-family: verdana;
   border: 1px solid #6099ee !important;
 }
 
-#orderTable td, #orderTable th
+#supplierRecordTable td, #supplierRecordTable th
 {
   font-size: 12px;
   border: 2px solid #6099ee;
 }
 
-#orderTable .project-name
+#supplierRecordTable .project-name
 {
   font-size: 16px;
 }
 
-#orderTable .table-headers
+#supplierRecordTable .table-headers
 {
   font-size: 12px;
   background: #6099ee;
