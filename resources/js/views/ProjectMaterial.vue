@@ -63,9 +63,8 @@
         <thead style="border-width: 0px">
           <tr style="border-width: 0px">
             <th
-              v-for="header in headers"
-              :colspan="header.colspan ? header.colspan : ''"
-              :style="{width: header.width+'%'}"
+              v-for="th in thead"
+              :style="{width: th.width+'%'}"
               style="border-width: 0px"
             ></th>
           </tr>
@@ -154,21 +153,38 @@
 
       accumulator: {},
       cols: 15,
+      thead: [
+        { title: '日期', width: 7, min: 0, max: 0 },
+        { title: '供应商', width: 12, min: 0, max: 0 },
+        { title: '货单号码', width: 8, min: 0, max: 0 },
+        { title: '货名', width: 12, min: 0, max: 0 },
+        { title: '退', width: 3, min: 0, max: 0 },
+        { title: '数量', width: 7, min: 0, max: 0 },
+        { title: '价格', width: 6, min: 0, max: 0 },
+        { title: '总价格', width: 6, min: 0, max: 0 },
+        { title: 'SST 百分比', width: 4, min: 0, max: 0 },
+        { title: 'SST 银额', width: 6, min: 0, max: 0 },
+        { title: '退货', width: 6, min: 0, max: 0 },
+        { title: '总数', width: 6, min: 0, max: 0 },
+        { title: '总结', width: 6, min: 0, max: 0 },
+        { title: '记录表', width: 8, min: 0, max: 0 },
+        { title: '操作', width: 12, min: 0, max: 0 },
+      ],
       headers: [
-        { title: '日期', width: 8 },
-        { title: '供应商', width: 8 },
-        { title: '货单号码', width: 8 },
-        { title: '货名', width: 8 },
-        { title: '退', width: 8 },
-        { title: '数量', width: 8 },
-        { title: '价格', width: 8 },
-        { title: '总价格', width: 8 },
-        { title: 'SST 银额', colspan: 2, width: 8 },
-        { title: '退货', width: 8 },
-        { title: '总数', width: 8 },
-        { title: '总结', width: 8 },
-        { title: '记录表', width: 8 },
-        { title: '操作', width: 8 },
+        { title: '日期', },
+        { title: '供应商', },
+        { title: '货单号码', },
+        { title: '货名', },
+        { title: '退', },
+        { title: '数量', },
+        { title: '价格', },
+        { title: '总价格', },
+        { title: 'SST 银额', colspan: 2,},
+        { title: '退货', },
+        { title: '总数', },
+        { title: '总结', },
+        { title: '记录表', },
+        { title: '操作', },
       ],
 
       projects: [],

@@ -6,7 +6,7 @@
       </template>
 
       <template v-if="create_mode || edit_mode">
-        <input type="date" v-model="date" style="max-width: 100%">
+        <input type="date" v-model="date">
       </template>
     </td>
 

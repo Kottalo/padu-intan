@@ -10928,3 +10928,16 @@ a.text-dark:focus {
   }
 }
 
+input[type=date] {
+  position: relative;
+}
+
+::-webkit-calendar-picker-indicator {
+  position: absolute;
+}
+
+::-webkit-calendar-picker-indicator {
+  right: 0;
+  padding: 0;
+}
+

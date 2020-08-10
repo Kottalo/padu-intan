@@ -624,56 +624,117 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
       deleteDialog: false,
       accumulator: {},
       cols: 15,
-      headers: [{
+      thead: [{
         title: '日期',
-        width: 8
+        width: 7,
+        min: 0,
+        max: 0
       }, {
         title: '供应商',
-        width: 8
+        width: 12,
+        min: 0,
+        max: 0
       }, {
         title: '货单号码',
-        width: 8
+        width: 8,
+        min: 0,
+        max: 0
       }, {
         title: '货名',
-        width: 8
+        width: 12,
+        min: 0,
+        max: 0
       }, {
         title: '退',
-        width: 8
+        width: 3,
+        min: 0,
+        max: 0
       }, {
         title: '数量',
-        width: 8
+        width: 7,
+        min: 0,
+        max: 0
       }, {
         title: '价格',
-        width: 8
+        width: 6,
+        min: 0,
+        max: 0
       }, {
         title: '总价格',
-        width: 8
+        width: 6,
+        min: 0,
+        max: 0
+      }, {
+        title: 'SST 百分比',
+        width: 4,
+        min: 0,
+        max: 0
       }, {
         title: 'SST 银额',
-        colspan: 2,
-        width: 8
+        width: 6,
+        min: 0,
+        max: 0
       }, {
         title: '退货',
-        width: 8
+        width: 6,
+        min: 0,
+        max: 0
       }, {
         title: '总数',
-        width: 8
+        width: 6,
+        min: 0,
+        max: 0
       }, {
         title: '总结',
-        width: 8
+        width: 6,
+        min: 0,
+        max: 0
       }, {
         title: '记录表',
-        width: 8
+        width: 8,
+        min: 0,
+        max: 0
       }, {
         title: '操作',
-        width: 8
+        width: 12,
+        min: 0,
+        max: 0
+      }],
+      headers: [{
+        title: '日期'
+      }, {
+        title: '供应商'
+      }, {
+        title: '货单号码'
+      }, {
+        title: '货名'
+      }, {
+        title: '退'
+      }, {
+        title: '数量'
+      }, {
+        title: '价格'
+      }, {
+        title: '总价格'
+      }, {
+        title: 'SST 银额',
+        colspan: 2
+      }, {
+        title: '退货'
+      }, {
+        title: '总数'
+      }, {
+        title: '总结'
+      }, {
+        title: '记录表'
+      }, {
+        title: '操作'
       }],
       projects: [],
       suppliers: [],
@@ -1098,7 +1159,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n#orderTable\r\n{\r\n  font-family: verdana;\r\n  border: 1px solid #6099ee !important;\n}\n#orderTable td, #orderTable th\r\n{\r\n  font-size: 12px;\r\n  border: 2px solid #6099ee;\n}\n#orderTable .project-name\r\n{\r\n  font-size: 16px;\n}\n#orderTable .table-headers\r\n{\r\n  font-size: 12px;\r\n  background: #6099ee;\r\n  color: white;\n}\n.btn-link\r\n{\r\n  color: black;\r\n  font-size: 13px !important;\r\n  /*font-weight: bold;*/\n}\r\n", ""]);
+exports.push([module.i, "\n#orderTable\n{\n  font-family: verdana;\n  border: 1px solid #6099ee !important;\n}\n#orderTable td, #orderTable th\n{\n  font-size: 12px;\n  border: 2px solid #6099ee;\n}\n#orderTable .project-name\n{\n  font-size: 16px;\n}\n#orderTable .table-headers\n{\n  font-size: 12px;\n  background: #6099ee;\n  color: white;\n}\n.btn-link\n{\n  color: black;\n  font-size: 13px !important;\n  /*font-weight: bold;*/\n}\n", ""]);
 
 // exports
 
@@ -1117,7 +1178,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n#supplierRecordTable\r\n{\r\n  font-family: verdana;\r\n  border: 1px solid #6099ee !important;\n}\n#supplierRecordTable td, #supplierRecordTable th\r\n{\r\n  font-size: 12px;\r\n  border: 2px solid #6099ee;\n}\n#supplierRecordTable .project-name\r\n{\r\n  font-size: 16px;\n}\n#supplierRecordTable .table-headers\r\n{\r\n  font-size: 12px;\r\n  background: #6099ee;\r\n  color: white;\n}\n.btn-link\r\n{\r\n  color: black;\r\n  font-size: 13px !important;\r\n  /*font-weight: bold;*/\n}\r\n", ""]);
+exports.push([module.i, "\n#supplierRecordTable\n{\n  font-family: verdana;\n  border: 1px solid #6099ee !important;\n}\n#supplierRecordTable td, #supplierRecordTable th\n{\n  font-size: 12px;\n  border: 2px solid #6099ee;\n}\n#supplierRecordTable .project-name\n{\n  font-size: 16px;\n}\n#supplierRecordTable .table-headers\n{\n  font-size: 12px;\n  background: #6099ee;\n  color: white;\n}\n.btn-link\n{\n  color: black;\n  font-size: 13px !important;\n  /*font-weight: bold;*/\n}\n", ""]);
 
 // exports
 
@@ -2494,7 +2555,6 @@ var render = function() {
                     expression: "date"
                   }
                 ],
-                staticStyle: { "max-width": "100%" },
                 attrs: { type: "date" },
                 domProps: { value: _vm.date },
                 on: {
@@ -3203,11 +3263,10 @@ var render = function() {
             _c(
               "tr",
               { staticStyle: { "border-width": "0px" } },
-              _vm._l(_vm.headers, function(header) {
+              _vm._l(_vm.thead, function(th) {
                 return _c("th", {
                   staticStyle: { "border-width": "0px" },
-                  style: { width: header.width + "%" },
-                  attrs: { colspan: header.colspan ? header.colspan : "" }
+                  style: { width: th.width + "%" }
                 })
               }),
               0
@@ -60176,7 +60235,7 @@ var app = new vue__WEBPACK_IMPORTED_MODULE_0___default.a({
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! C:\Users\Corthallo\Desktop\Projects\Laravel\padu-intan\resources\js\vue.js */"./resources/js/vue.js");
+module.exports = __webpack_require__(/*! /home/padu/public_html/resources/js/vue.js */"./resources/js/vue.js");
 
 
 /***/ })
