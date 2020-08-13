@@ -46,6 +46,7 @@ Route::middleware(['auth'])->group(function () {
         'orders' => 'OrderController',
         'items' => 'ItemController',
         'order_items' => 'OrderItemController',
+        'payments' => 'PaymentController',
     ]);
 
     Route::prefix('suppliers')->group(function() {
@@ -54,6 +55,10 @@ Route::middleware(['auth'])->group(function () {
     });
 
     Route::post('/order_items/getItems', 'OrderItemController@getItems');
+
+    Route::prefix('orders')->group(function() {
+        Route::post('getItems', 'OrderController@getItems');
+    });
 
 });
 

@@ -51,7 +51,7 @@
           <v-row>
             <v-btn
               block
-              @click="getItems();deleteDialog = true"
+              @click="getItems();"
             >提交</v-btn>
           </v-row>
         </v-col>
@@ -59,81 +59,39 @@
     </v-container>
 
     <div class="px-1">
-      <table>
-        <thead style="border-width: 0px">
-          <tr style="border-width: 0px">
+      <table class="datatable">
+        <thead>
+          <tr class="table-headers">
             <th
               v-for="header in headers"
               :colspan="header.colspan ? header.colspan : ''"
-              :style="{width: header.width+'%'}"
+              :style="{width: header.width+'%', backgroundColor: header.title == '' ? 'white': '', border: header.title == '' ? 0 : 0}"
               style="border-width: 0px"
-            ></th>
+            >{{ header.title }}</th>
           </tr>
         </thead>
 
-        <tbody id="supplierRecordTable" class="table table-sm table-bordered table-hover bg-white">
-          <template v-for="project in items">
-            <tr>
-              <th class="project-name" :colspan="cols">{{ project.name }}</th>
-            </tr>
+        <tbody class="datatable table table-sm table-bordered table-hover bg-white">
+          <template v-for="supplier in items">
 
-            <tr class="table-headers">
-              <th
-                v-for="header in headers"
-                :colspan="header.colspan ? header.colspan : ''"
-              >{{ header.title }}</th>
-            </tr>
-
-            <template v-for="order in project.orders">
-              <OrderItemDataRow
-                :projectId="order.project_id"
-                v-for="order_item in order.order_items"
-                :key="'o'+order_item.id"
-                dataMode
-                :orderItem="order_item"
-                :accumulator="accumulator[order_item.id]"
-                @update="getItems()"
-                @confirm-delete="toDelete($event)"
-              ></OrderItemDataRow>
-
-              <tr>
-                <th class="text-right" colspan="7">Total</th>
-                <th class="text-right" :class="{'text-danger': order.total_price < 0}">{{ order.total_price }}</th>
-                <th></th>
-                <th class="text-right" :class="{'text-danger': order.total_price < 0}">{{ order.sst_amount }}</th>
-                <th></th>
-                <th class="text-right" :class="{'text-danger': order.sub_total < 0}">{{ order.sub_total }}</th>
-                <th></th>
-                <th></th>
-                <th></th>
-              </tr>
-
-              <tr>
-                <td class="table-gap" style="height: 20px;" :colspan="cols"></td>
-              </tr>
-            </template>
-
-            <tr>
-              <th class="text-right" colspan="7">Sub Total</th>
-              <th class="text-right" :class="{'text-danger': project.total_price < 0}">{{ project.total_price }}</th>
-              <th></th>
-              <th class="text-right" :class="{'text-danger': project.sst_amount < 0}">{{ project.sst_amount }}</th>
-              <th></th>
-              <th class="text-right" :class="{'text-danger': project.sub_total < 0}">{{ project.sub_total }}</th>
-              <th></th>
-              <th></th>
-              <th></th>
-            </tr>
-
-            <OrderItemDataRow
-              :projectId="project.id"
-              :key="'p'+project.id"
-              createMode
+            <PaymentDataRow
+              v-for="(order, key) in supplier.orders"
+              :key="key"
+              :Order="order"
+              :accumulator="accumulator[order.id]"
               @update="getItems()"
-            ></OrderItemDataRow>
+            ></PaymentDataRow>
 
             <tr>
-              <td class="table-gap" style="height: 20px;" :colspan="cols"></td>
+              <th class="text-right" colspan="4">Total</th>
+              <th class="text-right">{{ supplier.order_total }}</th>
+              <th class="text-right" colspan="7">Total</th>
+              <th class="text-right">{{ supplier.payment_total }}</th>
+              <th colspan="3"></th>
+            </tr>
+
+            <tr>
+              <td colspan="16"></td>
             </tr>
           </template>
         </tbody>
@@ -159,15 +117,17 @@
         { title: '供应商', width: 8 },
         { title: '工程', width: 8 },
         { title: '货单号码', width: 8 },
-        { title: '总数', width: 8 },
-        { title: '总结', width: 8 },
+        { title: '总数', width: 6 },
+        { title: '总结', width: 6 },
+        { title: '', width: 1 },
         { title: '支银单号码', width: 8 },
         { title: '银行编号码', width: 8 },
-        { title: '出支票', width: 8 },
-        { title: '转账', width: 8 },
-        { title: '总数', width: 8 },
-        { title: '总结', width: 8 },
-        { title: '记录表', width: 8 },
+        { title: '出支票', width: 6 },
+        { title: '出现钱', width: 6 },
+        { title: '转账', width: 6 },
+        { title: '总数', width: 6 },
+        { title: '总结', width: 6 },
+        { title: '记录表', width: 2 },
         { title: '操作', width: 8 },
       ],
 
@@ -225,7 +185,7 @@
           date_to: this.date_to,
         };
 
-        axios.post('/order_items/getItems', data)
+        axios.post('/orders/getItems', data)
         .then((res) => {
           this.items = {}
           this.$nextTick()
@@ -233,51 +193,30 @@
             this.items = res.data;
           });
 
-          var acc = 0;
+          var acc1 = 0;
+          var acc2 = 0;
           this.accumulator = {};
 
-          res.data.forEach((project) => {
-            project.orders.forEach((order) => {
-              order.order_items.forEach((order_item) => {
-                this.accumulator[order_item.id] = acc += parseFloat(order_item.sub_total);
-              });
+          res.data.forEach((supplier) => {
+            supplier.orders.forEach((order) => {
+              this.accumulator[order.id] = {};
+              this.accumulator[order.id]['order'] = acc1 += parseFloat(order.sub_total);
+              this.accumulator[order.id]['payment'] = acc2 += parseFloat(order.payment.total);
             });
           });
-        });
+        })
+        .catch((err) => {
+          console.log(err.response)
+        })
       },
     },
   }
 </script>
 
 <style>
-#supplierRecordTable
-{
-  font-family: verdana;
-  border: 1px solid #6099ee !important;
-}
-
-#supplierRecordTable td, #supplierRecordTable th
-{
-  font-size: 12px;
-  border: 2px solid #6099ee;
-}
-
-#supplierRecordTable .project-name
-{
-  font-size: 16px;
-}
-
-#supplierRecordTable .table-headers
-{
-  font-size: 12px;
-  background: #6099ee;
-  color: white;
-}
-
 .btn-link
 {
   color: black;
   font-size: 13px !important;
-  /*font-weight: bold;*/
 }
 </style>

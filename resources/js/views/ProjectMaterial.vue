@@ -70,7 +70,7 @@
           </tr>
         </thead>
 
-        <tbody id="orderTable" class="table table-sm table-bordered table-hover bg-white">
+        <tbody class="datatable table table-sm table-bordered table-hover bg-white">
           <template v-for="project in items">
             <tr>
               <th class="project-name" :colspan="cols">{{ project.name }}</th>
@@ -266,29 +266,6 @@
 </script>
 
 <style>
-#orderTable
-{
-  font-family: verdana;
-  border: 1px solid #6099ee !important;
-}
-
-#orderTable td, #orderTable th
-{
-  font-size: 12px;
-  border: 2px solid #6099ee;
-}
-
-#orderTable .project-name
-{
-  font-size: 16px;
-}
-
-#orderTable .table-headers
-{
-  font-size: 12px;
-  background: #6099ee;
-  color: white;
-}
 
 .btn-link
 {

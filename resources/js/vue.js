@@ -8,6 +8,7 @@ Vue.component('supplier-record',require('./views/SupplierRecord.vue').default);
 /* Components */
 Vue.component('Datepicker',require('./components/Datepicker.vue').default);
 Vue.component('OrderItemDataRow',require('./components/OrderItemDataRow.vue').default);
+Vue.component('PaymentDataRow',require('./components/PaymentDataRow.vue').default);
 Vue.component('ConfirmDialog',require('./components/ConfirmDialog.vue').default);
 
 const app = new Vue({

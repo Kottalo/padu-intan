@@ -10941,3 +10941,24 @@ input[type=date] {
   padding: 0;
 }
 
+.datatable {
+  font-family: verdana;
+  border: 1px solid #6099ee !important;
+}
+
+.datatable td,
+.datatable th {
+  font-size: 12px;
+  border: 2px solid #6099ee;
+}
+
+.datatable .project-name {
+  font-size: 16px;
+}
+
+.datatable .table-headers {
+  font-size: 12px;
+  background: #6099ee;
+  color: white;
+}
+
