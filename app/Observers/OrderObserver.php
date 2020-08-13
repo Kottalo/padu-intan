@@ -21,8 +21,7 @@ class OrderObserver
         $payment->ref_no = '';
         $payment->cheque = 0;
         $payment->cash = 0;
-        $payment->payment = 0;
-        $payment->total = 0;
+        $payment->remarks = '';
 
         $payment->save();
     }

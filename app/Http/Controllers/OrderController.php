@@ -141,7 +141,7 @@ class OrderController extends Controller
 
           },
         ])
-        ->selectRaw('suppliers.id, s1.order_total, round2(cheque + cash + online) AS payment_total')
+        ->selectRaw('suppliers.id, s1.order_total, p1.payment_total')
         ->leftJoin('orders', 'suppliers.id', '=', 'orders.supplier_id')
         ->leftJoin('order_items', 'orders.id', '=', 'order_items.order_id')
         ->leftJoin('payments', 'orders.id', '=', 'payments.order_id')
@@ -161,6 +161,22 @@ class OrderController extends Controller
             function($join)
             {
                 $join->on('suppliers.id', '=', 's1.id');
+            }
+        )
+        ->leftJoin(
+            DB::raw("(SELECT supplier_id AS id,
+            round2( SUM( cheque + cash + online ) ) AS payment_total
+            FROM orders
+            LEFT JOIN payments ON orders.id = payments.order_id
+            WHERE orders.supplier_id IN $supplierId_sql
+            AND orders.project_id IN $projectId_sql
+            AND orders.date BETWEEN '$date_from' AND '$date_to'
+            GROUP BY supplier_id)
+            AS p1
+            "),
+            function($join)
+            {
+                $join->on('suppliers.id', '=', 'p1.id');
             }
         )
         ->groupBy('suppliers.id')
