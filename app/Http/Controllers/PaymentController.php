@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-use App\Models\Payment;
+use App\Models\{ Payment, Order };
 
 class PaymentController extends Controller
 {
@@ -93,5 +93,23 @@ class PaymentController extends Controller
     public function destroy($id)
     {
         //
+    }
+    
+    public static function createPayments()
+    {
+        foreach (Order::get() as $order)
+        {
+            $p = new Payment;
+            
+            $p->order_id = $order->id;
+            $p->voucher_no = '';
+            $p->ref_no = '';
+            $p->cheque = 0;
+            $p->cash = 0;
+            $p->online = 0;
+            $p->remarks = '';
+            
+            $p->save();
+        }
     }
 }

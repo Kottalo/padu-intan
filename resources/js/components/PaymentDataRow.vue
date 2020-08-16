@@ -41,6 +41,20 @@
         >
       </template>
     </td>
+    
+    <td class="text-right">
+      <template v-if="!edit_mode">
+        {{ order.payment.bank.name }}
+      </template>
+
+      <template v-else>
+        <input
+          class="ma-0 pa-0 text-right"
+          v-model="bank_name"
+          style="max-width: 100%"
+        >
+      </template>
+    </td>
 
     <td class="text-right">
       <template v-if="!edit_mode">
@@ -158,8 +172,9 @@
         edit_mode: false,
         order: this.Order,
 
-        voucher_no: null,
-        ref_no: null,
+        voucher_no: '',
+        bank_name: '',
+        ref_no: '',
         cheque: 0,
         cash: 0,
         online: 0,
@@ -184,6 +199,7 @@
       resetData()
       {
         this.voucher_no = this.order.payment.voucher_no;
+        this.bank_name = this.order.payment.bank_id ? this.order.payment.bank.name : '';
         this.ref_no = this.order.payment.ref_no;
         this.cheque = this.order.payment.cheque;
         this.cash = this.order.payment.cash;

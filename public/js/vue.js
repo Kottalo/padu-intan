@@ -624,6 +624,20 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: {
     Order: Object,
@@ -633,8 +647,9 @@ __webpack_require__.r(__webpack_exports__);
     return {
       edit_mode: false,
       order: this.Order,
-      voucher_no: null,
-      ref_no: null,
+      voucher_no: '',
+      bank_name: '',
+      ref_no: '',
       cheque: 0,
       cash: 0,
       online: 0,
@@ -654,6 +669,7 @@ __webpack_require__.r(__webpack_exports__);
   methods: {
     resetData: function resetData() {
       this.voucher_no = this.order.payment.voucher_no;
+      this.bank_name = this.order.payment.bank_id ? this.order.payment.bank.name : '';
       this.ref_no = this.order.payment.ref_no;
       this.cheque = this.order.payment.cheque;
       this.cash = this.order.payment.cash;
@@ -1181,7 +1197,10 @@ __webpack_require__.r(__webpack_exports__);
         title: '支银单号码',
         width: 8
       }, {
-        title: '银行编号码',
+        title: '银行',
+        width: 8
+      }, {
+        title: '编号码',
         width: 8
       }, {
         title: '出支票',
@@ -1360,7 +1379,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n.btn-link\r\n{\r\n  color: black;\r\n  font-size: 13px !important;\r\n  /*font-weight: bold;*/\n}\r\n", ""]);
+exports.push([module.i, "\n.btn-link\n{\n  color: black;\n  font-size: 13px !important;\n  /*font-weight: bold;*/\n}\n", ""]);
 
 // exports
 
@@ -1379,7 +1398,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n.btn-link\r\n{\r\n  color: black;\r\n  font-size: 13px !important;\n}\r\n", ""]);
+exports.push([module.i, "\n.btn-link\n{\n  color: black;\n  font-size: 13px !important;\n}\n", ""]);
 
 // exports
 
@@ -3388,6 +3407,43 @@ var render = function() {
                       return
                     }
                     _vm.voucher_no = $event.target.value
+                  }
+                }
+              })
+            ]
+      ],
+      2
+    ),
+    _vm._v(" "),
+    _c(
+      "td",
+      { staticClass: "text-right" },
+      [
+        !_vm.edit_mode
+          ? [
+              _vm._v(
+                "\n      " + _vm._s(_vm.order.payment.bank.name) + "\n    "
+              )
+            ]
+          : [
+              _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.bank_name,
+                    expression: "bank_name"
+                  }
+                ],
+                staticClass: "ma-0 pa-0 text-right",
+                staticStyle: { "max-width": "100%" },
+                domProps: { value: _vm.bank_name },
+                on: {
+                  input: function($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.bank_name = $event.target.value
                   }
                 }
               })
@@ -60775,7 +60831,7 @@ var app = new vue__WEBPACK_IMPORTED_MODULE_0___default.a({
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! C:\Users\Corthallo\Desktop\Projects\Laravel\padu-intan\resources\js\vue.js */"./resources/js/vue.js");
+module.exports = __webpack_require__(/*! /home/padu/public_html/resources/js/vue.js */"./resources/js/vue.js");
 
 
 /***/ })
