@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-use App\Models\{ Payment, Order };
+use App\Models\{ Payment, Order, Bank };
 
 class PaymentController extends Controller
 {
@@ -79,6 +79,19 @@ class PaymentController extends Controller
         $payment->online = $request->online ? $request->online : 0;
         $payment->remarks = $request->remarks ? $request->remarks : '';
 
+        $bank = Bank::whereName($request->bank_name)->first();
+
+        if (!$bank)
+        {
+            $bank = new Bank;
+
+            $bank->name = $request->bank_name ? $request->bank_name : '';
+        }
+
+        $bank->save();
+
+        $payment->bank_id = $bank->id;
+
         $payment->save();
 
         return 1;
@@ -94,13 +107,13 @@ class PaymentController extends Controller
     {
         //
     }
-    
+
     public static function createPayments()
     {
         foreach (Order::get() as $order)
         {
             $p = new Payment;
-            
+
             $p->order_id = $order->id;
             $p->voucher_no = '';
             $p->ref_no = '';
@@ -108,7 +121,7 @@ class PaymentController extends Controller
             $p->cash = 0;
             $p->online = 0;
             $p->remarks = '';
-            
+
             $p->save();
         }
     }

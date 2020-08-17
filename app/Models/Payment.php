@@ -13,6 +13,11 @@ class Payment extends Model
         return $this->belongsTo('App\Models\Order');
     }
 
+    public function bank()
+    {
+        return $this->belongsTo('App\Models\Bank');
+    }
+
     public function getTotalAttribute()
     {
         return $this->cheque + $this->cash + $this->online;

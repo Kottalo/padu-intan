@@ -16,11 +16,11 @@
       {{ order.ref_no }}
     </td>
 
-    <td class="text-right">
+    <td class="text-right text-danger">
       {{ order.sub_total }}
     </td>
 
-    <td class="text-right">
+    <td class="text-right text-danger">
       {{ order_accumulate.toFixed(2) }}
     </td>
 
@@ -41,10 +41,10 @@
         >
       </template>
     </td>
-    
+
     <td class="text-right">
       <template v-if="!edit_mode">
-        {{ order.payment.bank.name }}
+        {{ bank_name }}
       </template>
 
       <template v-else>
@@ -70,7 +70,7 @@
       </template>
     </td>
 
-    <td class="text-right">
+    <td class="text-right text-danger">
       <template v-if="!edit_mode">
         {{ order.payment.cheque }}
       </template>
@@ -84,7 +84,7 @@
       </template>
     </td>
 
-    <td class="text-right">
+    <td class="text-right text-danger">
       <template v-if="!edit_mode">
         {{ order.payment.cash }}
       </template>
@@ -98,7 +98,7 @@
       </template>
     </td>
 
-    <td class="text-right">
+    <td class="text-right text-danger">
       <template v-if="!edit_mode">
         {{ order.payment.online }}
       </template>
@@ -210,6 +210,7 @@
       {
         var data = {
           voucher_no: this.voucher_no,
+          bank_name: this.bank_name,
           ref_no: this.ref_no,
           cheque: this.cheque,
           cash: this.cash,

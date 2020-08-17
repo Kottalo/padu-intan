@@ -140,6 +140,7 @@ class OrderController extends Controller
           {
 
           },
+          'orders.payment.bank'
         ])
         ->selectRaw('suppliers.id, s1.order_total, p1.payment_total')
         ->leftJoin('orders', 'suppliers.id', '=', 'orders.supplier_id')

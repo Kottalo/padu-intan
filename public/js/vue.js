@@ -681,6 +681,7 @@ __webpack_require__.r(__webpack_exports__);
 
       var data = {
         voucher_no: this.voucher_no,
+        bank_name: this.bank_name,
         ref_no: this.ref_no,
         cheque: this.cheque,
         cash: this.cash,
@@ -1379,7 +1380,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n.btn-link\n{\n  color: black;\n  font-size: 13px !important;\n  /*font-weight: bold;*/\n}\n", ""]);
+exports.push([module.i, "\n.btn-link\r\n{\r\n  color: black;\r\n  font-size: 13px !important;\r\n  /*font-weight: bold;*/\n}\r\n", ""]);
 
 // exports
 
@@ -1398,7 +1399,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n.btn-link\n{\n  color: black;\n  font-size: 13px !important;\n}\n", ""]);
+exports.push([module.i, "\n.btn-link\r\n{\r\n  color: black;\r\n  font-size: 13px !important;\n}\r\n", ""]);
 
 // exports
 
@@ -3368,11 +3369,11 @@ var render = function() {
       _vm._v("\n    " + _vm._s(_vm.order.ref_no) + "\n  ")
     ]),
     _vm._v(" "),
-    _c("td", { staticClass: "text-right" }, [
+    _c("td", { staticClass: "text-right text-danger" }, [
       _vm._v("\n    " + _vm._s(_vm.order.sub_total) + "\n  ")
     ]),
     _vm._v(" "),
-    _c("td", { staticClass: "text-right" }, [
+    _c("td", { staticClass: "text-right text-danger" }, [
       _vm._v("\n    " + _vm._s(_vm.order_accumulate.toFixed(2)) + "\n  ")
     ]),
     _vm._v(" "),
@@ -3420,11 +3421,7 @@ var render = function() {
       { staticClass: "text-right" },
       [
         !_vm.edit_mode
-          ? [
-              _vm._v(
-                "\n      " + _vm._s(_vm.order.payment.bank.name) + "\n    "
-              )
-            ]
+          ? [_vm._v("\n      " + _vm._s(_vm.bank_name) + "\n    ")]
           : [
               _c("input", {
                 directives: [
@@ -3487,7 +3484,7 @@ var render = function() {
     _vm._v(" "),
     _c(
       "td",
-      { staticClass: "text-right" },
+      { staticClass: "text-right text-danger" },
       [
         !_vm.edit_mode
           ? [_vm._v("\n      " + _vm._s(_vm.order.payment.cheque) + "\n    ")]
@@ -3520,7 +3517,7 @@ var render = function() {
     _vm._v(" "),
     _c(
       "td",
-      { staticClass: "text-right" },
+      { staticClass: "text-right text-danger" },
       [
         !_vm.edit_mode
           ? [_vm._v("\n      " + _vm._s(_vm.order.payment.cash) + "\n    ")]
@@ -3553,7 +3550,7 @@ var render = function() {
     _vm._v(" "),
     _c(
       "td",
-      { staticClass: "text-right" },
+      { staticClass: "text-right text-danger" },
       [
         !_vm.edit_mode
           ? [_vm._v("\n      " + _vm._s(_vm.order.payment.online) + "\n    ")]
@@ -60831,7 +60828,7 @@ var app = new vue__WEBPACK_IMPORTED_MODULE_0___default.a({
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! /home/padu/public_html/resources/js/vue.js */"./resources/js/vue.js");
+module.exports = __webpack_require__(/*! C:\Users\Corthallo\Desktop\Projects\Laravel\padu-intan\resources\js\vue.js */"./resources/js/vue.js");
 
 
 /***/ })
