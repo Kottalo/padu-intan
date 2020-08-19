@@ -1380,7 +1380,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n.btn-link\r\n{\r\n  color: black;\r\n  font-size: 13px !important;\r\n  /*font-weight: bold;*/\n}\r\n", ""]);
+exports.push([module.i, "\n.btn-link\n{\n  color: black;\n  font-size: 13px !important;\n  /*font-weight: bold;*/\n}\n", ""]);
 
 // exports
 
@@ -1399,7 +1399,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n.btn-link\r\n{\r\n  color: black;\r\n  font-size: 13px !important;\n}\r\n", ""]);
+exports.push([module.i, "\n.btn-link\n{\n  color: black;\n  font-size: 13px !important;\n}\n", ""]);
 
 // exports
 
@@ -4340,7 +4340,7 @@ var render = function() {
                       [_vm._v("Total")]
                     ),
                     _vm._v(" "),
-                    _c("th", { staticClass: "text-right" }, [
+                    _c("th", { staticClass: "text-right text-primary" }, [
                       _vm._v(_vm._s(supplier.order_total))
                     ]),
                     _vm._v(" "),
@@ -4350,14 +4350,14 @@ var render = function() {
                       [_vm._v("Total")]
                     ),
                     _vm._v(" "),
-                    _c("th", { staticClass: "text-right" }, [
+                    _c("th", { staticClass: "text-right text-primary" }, [
                       _vm._v(_vm._s(supplier.payment_total))
                     ]),
                     _vm._v(" "),
-                    _c("th", { attrs: { colspan: "3" } })
+                    _c("th", { attrs: { colspan: "4" } })
                   ]),
                   _vm._v(" "),
-                  _c("tr", [_c("td", { attrs: { colspan: "16" } })])
+                  _c("tr", [_c("td", { attrs: { colspan: "17" } })])
                 ]
               })
             ],
@@ -60828,7 +60828,7 @@ var app = new vue__WEBPACK_IMPORTED_MODULE_0___default.a({
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! C:\Users\Corthallo\Desktop\Projects\Laravel\padu-intan\resources\js\vue.js */"./resources/js/vue.js");
+module.exports = __webpack_require__(/*! /home/padu/public_html/resources/js/vue.js */"./resources/js/vue.js");
 
 
 /***/ })

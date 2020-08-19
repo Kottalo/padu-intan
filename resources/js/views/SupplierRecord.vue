@@ -84,14 +84,14 @@
 
             <tr>
               <th class="text-right" colspan="4">Total</th>
-              <th class="text-right">{{ supplier.order_total }}</th>
+              <th class="text-right text-primary">{{ supplier.order_total }}</th>
               <th class="text-right" colspan="7">Total</th>
-              <th class="text-right">{{ supplier.payment_total }}</th>
-              <th colspan="3"></th>
+              <th class="text-right text-primary">{{ supplier.payment_total }}</th>
+              <th colspan="4"></th>
             </tr>
 
             <tr>
-              <td colspan="16"></td>
+              <td colspan="17"></td>
             </tr>
           </template>
         </tbody>
