@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use App\Models\{ Project, Customer, ProjectSupplier };
+use Carbon\Carbon;
 
 class ProjectController extends Controller
 {
@@ -36,6 +37,8 @@ class ProjectController extends Controller
      */
     public function store(Request $request)
     {
+        $today = Carbon::now()->format('Y-m-d');
+
         $supplierIds = $request->supplierIds ? $request->supplierIds : [];
 
         $customer_name = $request->customer_name;
@@ -59,9 +62,9 @@ class ProjectController extends Controller
         $project = new Project;
 
         $project->name = $request->name;
-        $project->start_on = $request->start_on;
-        $project->end_on = $request->end_on;
-        $project->cost = $request->cost;
+        $project->start_on = $request->start_on ?: $today;
+        $project->end_on = $request->end_on ?: $today;
+        $project->cost = $request->cost ?: 0;
         $project->customer_id = $customer_id;
         $project->address = $request->address;
         $project->remarks = $request->remarks;
