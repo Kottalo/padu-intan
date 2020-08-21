@@ -138,10 +138,10 @@
       <template v-if="!edit_mode">
         <div class="row mx-auto">
           <div class="col p-0 m-0 text-center">
-            <a class="btn btn-sm btn-link py-1 px-2" style="font-size: 12px;height: 24px;" @click="edit_mode = true;">修改</a>
+            <v-btn text class="btn btn-sm btn-link py-1 px-2 row-btn" @click="edit_mode = true;">修改</v-btn>
           </div>
           <div class="col p-0 m-0 text-left">
-            <a class="btn btn-sm btn-link py-1 px-2" style="font-size: 12px;height: 24px;" data-toggle="modal" data-target="#deleteConfirmModal" @click="$emit('confirm-delete', order_item.id)">清空</a>
+            <v-btn text class="btn btn-sm btn-link py-1 px-2 row-btn" data-toggle="modal" data-target="#deleteConfirmModal" @click="$emit('confirm-delete', order_item.id)">清空</v-btn>
           </div>
         </div>
       </template>
@@ -149,10 +149,10 @@
       <template v-else>
         <div class="row mx-auto">
           <div class="col p-0 m-0 text-center">
-            <a class="btn btn-sm btn-link py-1 px-2" style="font-size: 12px;height: 24px;" @click="submitForm();">更新</a>
+            <v-btn text class="btn btn-sm btn-link py-1 px-2 row-btn" @click="submitForm();">更新</v-btn>
           </div>
           <div class="col p-0 m-0 text-left">
-            <a class="btn btn-sm btn-link py-1 px-2" style="font-size: 12px;height: 24px;" @click="edit_mode = false;resetData();">取消</a>
+            <v-btn text class="btn btn-sm btn-link py-1 px-2 row-btn" @click="edit_mode = false;resetData();">取消</v-btn>
           </div>
         </div>
       </template>

@@ -53,7 +53,18 @@
     </td>
 
     <td class="text-left pt-1 pl-2">
-      <input class="" v-model="Return" style="max-width: 100%" type="checkbox" aria-label="Checkbox for following text input">
+      <template v-if="data_mode && !edit_mode">
+        <v-icon v-if="Return" color="success">
+          mdi-checkbox-marked
+        </v-icon>
+        <v-icon v-else>
+          mdi-checkbox-blank-outline
+        </v-icon>
+      </template>
+
+      <template v-if="create_mode || edit_mode">
+        <input class="" v-model="Return" style="max-width: 100%" type="checkbox" aria-label="Checkbox for following text input">
+      </template>
     </td>
 
     <td>
@@ -137,10 +148,10 @@
       <template v-if="data_mode && !edit_mode">
         <div class="row mx-auto">
           <div class="col p-0 m-0 text-center">
-            <a class="btn btn-sm btn-link py-1 px-2" style="font-size: 12px;height: 24px;" @click="edit_mode = true;">修改</a>
+            <v-btn text class="btn btn-sm btn-link py-1 px-2 row-btn" @click="edit_mode = true;">修改</v-btn>
           </div>
           <div class="col p-0 m-0 text-left">
-            <a class="btn btn-sm btn-link py-1 px-2" style="font-size: 12px;height: 24px;" data-toggle="modal" data-target="#deleteConfirmModal" @click="$emit('confirm-delete', order_item.id)">删除</a>
+            <v-btn text class="btn btn-sm btn-link py-1 px-2 row-btn" data-toggle="modal" data-target="#deleteConfirmModal" @click="$emit('confirm-delete', order_item.id)">删除</v-btn>
           </div>
         </div>
       </template>
@@ -148,10 +159,10 @@
       <template v-if="edit_mode">
         <div class="row mx-auto">
           <div class="col p-0 m-0 text-center">
-            <a class="btn btn-sm btn-link py-1 px-2" style="font-size: 12px;height: 24px;" @click="submitForm();">更新</a>
+            <v-btn text class="btn btn-sm btn-link py-1 px-2 row-btn" @click="submitForm();">更新</v-btn>
           </div>
           <div class="col p-0 m-0 text-left">
-            <a class="btn btn-sm btn-link py-1 px-2" style="font-size: 12px;height: 24px;" @click="edit_mode = false;resetData();">取消</a>
+            <v-btn text class="btn btn-sm btn-link py-1 px-2 row-btn" @click="edit_mode = false;resetData();">取消</v-btn>
           </div>
         </div>
       </template>
@@ -159,10 +170,10 @@
       <template v-if="create_mode">
         <div class="row mx-auto">
           <div class="col p-0 m-0 text-center">
-            <a class="btn btn-sm btn-link py-1 px-2" style="font-size: 12px;height: 24px;" @click="submitForm();">添加</a>
+            <v-btn text class="btn btn-sm btn-link py-1 px-2 row-btn" @click="submitForm();">添加</v-btn>
           </div>
           <div class="col p-0 m-0 text-left">
-            <a class="btn btn-sm btn-link py-1 px-2" style="font-size: 12px;height: 24px;" data-toggle="modal" data-target="#deleteConfirmModal">清空</a>
+            <v-btn text class="btn btn-sm btn-link py-1 px-2 row-btn" data-toggle="modal" data-target="#deleteConfirmModal">清空</v-btn>
           </div>
         </div>
       </template>

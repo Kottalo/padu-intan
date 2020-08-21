@@ -64,7 +64,7 @@
           <tr style="border-width: 0px">
             <th
               v-for="th in thead"
-              :style="{width: th.width+'%'}"
+              :style="{minWidth: th.width+'px'}"
               style="border-width: 0px"
             ></th>
           </tr>
@@ -154,21 +154,21 @@
       accumulator: {},
       cols: 15,
       thead: [
-        { title: '日期', width: 7, min: 0, max: 0 },
-        { title: '供应商', width: 12, min: 0, max: 0 },
-        { title: '货单号码', width: 8, min: 0, max: 0 },
-        { title: '货名', width: 12, min: 0, max: 0 },
-        { title: '退', width: 3, min: 0, max: 0 },
-        { title: '数量', width: 7, min: 0, max: 0 },
-        { title: '价格', width: 6, min: 0, max: 0 },
-        { title: '总价格', width: 6, min: 0, max: 0 },
-        { title: 'SST 百分比', width: 4, min: 0, max: 0 },
-        { title: 'SST 银额', width: 6, min: 0, max: 0 },
-        { title: '退货', width: 6, min: 0, max: 0 },
-        { title: '总数', width: 6, min: 0, max: 0 },
-        { title: '总结', width: 6, min: 0, max: 0 },
-        { title: '记录表', width: 8, min: 0, max: 0 },
-        { title: '操作', width: 12, min: 0, max: 0 },
+        { title: '日期', width: 130, min: 0, max: 0 },
+        { title: '供应商', width: 160, min: 0, max: 0 },
+        { title: '货单号码', width: 96, min: 0, max: 0 },
+        { title: '货名', width: 266, min: 0, max: 0 },
+        { title: '退', width: 30, min: 0, max: 0 },
+        { title: '数量', width: 86, min: 0, max: 0 },
+        { title: '价格', width: 68, min: 0, max: 0 },
+        { title: '总价格', width: 96, min: 0, max: 0 },
+        { title: 'SST 百分比', width: 102, min: 0, max: 0 },
+        { title: 'SST 银额', width: 66, min: 0, max: 0 },
+        { title: '退货', width: 96, min: 0, max: 0 },
+        { title: '总数', width: 74, min: 0, max: 0 },
+        { title: '总结', width: 96, min: 0, max: 0 },
+        { title: '记录表', width: 89, min: 0, max: 0 },
+        { title: '操作', width: 120, min: 0, max: 0 },
       ],
       headers: [
         { title: '日期', },
@@ -243,7 +243,7 @@
 
         axios.post('/order_items/getItems', data)
         .then((res) => {
-          this.items = {}
+          // this.items = {}
           this.$nextTick()
           .then(() => {
             this.items = res.data;
@@ -264,13 +264,3 @@
     },
   }
 </script>
-
-<style>
-
-.btn-link
-{
-  color: black;
-  font-size: 13px !important;
-  /*font-weight: bold;*/
-}
-</style>

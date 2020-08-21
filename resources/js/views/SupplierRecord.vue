@@ -65,7 +65,7 @@
             <th
               v-for="header in headers"
               :colspan="header.colspan ? header.colspan : ''"
-              :style="{width: header.width+'%', backgroundColor: header.title == '' ? 'white': '', border: header.title == '' ? 0 : 0}"
+              :style="{minWidth: header.width+'px', backgroundColor: header.title == '' ? 'white': '', border: header.title == '' ? 0 : 0}"
               style="border-width: 0px"
             >{{ header.title }}</th>
           </tr>
@@ -113,23 +113,23 @@
       accumulator: {},
       cols: 15,
       headers: [
-        { title: '日期', width: 8 },
-        { title: '供应商', width: 8 },
-        { title: '工程', width: 8 },
-        { title: '货单号码', width: 8 },
-        { title: '总数', width: 6 },
-        { title: '总结', width: 6 },
-        { title: '', width: 1 },
-        { title: '支银单号码', width: 8 },
-        { title: '银行', width: 8 },
-        { title: '编号码', width: 8 },
-        { title: '出支票', width: 6 },
-        { title: '出现钱', width: 6 },
-        { title: '转账', width: 6 },
-        { title: '总数', width: 6 },
-        { title: '总结', width: 6 },
-        { title: '记录表', width: 2 },
-        { title: '操作', width: 8 },
+        { title: '日期', width: 130 },
+        { title: '供应商', width: 160 },
+        { title: '工程', width: 110 },
+        { title: '货单号码', width: 96 },
+        { title: '总数', width: 96 },
+        { title: '总结', width: 74 },
+        { title: '', width: 8 },
+        { title: '支银单号码', width: 96 },
+        { title: '银行', width: 96 },
+        { title: '编号码', width: 96 },
+        { title: '出支票', width: 66 },
+        { title: '出现钱', width: 66 },
+        { title: '转账', width: 66 },
+        { title: '总数', width: 96 },
+        { title: '总结', width: 74 },
+        { title: '记录表', width: 96 },
+        { title: '操作', width: 120 },
       ],
 
       projects: [],
@@ -213,11 +213,3 @@
     },
   }
 </script>
-
-<style>
-.btn-link
-{
-  color: black;
-  font-size: 13px !important;
-}
-</style>

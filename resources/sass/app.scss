@@ -25,6 +25,7 @@ input[type='date']{position:relative;}
 {
   font-size: 12px;
   border: 2px solid #6099ee;
+  vertical-align: middle;
 }
 
 .datatable .project-name
@@ -37,4 +38,17 @@ input[type='date']{position:relative;}
   font-size: 12px;
   background: #6099ee;
   color: white;
+}
+
+.row-btn
+{
+  font-size: 12px !important;
+  max-height: 16px !important;
+  max-width: 48px !important;
+  color: black !important;
+}
+
+html
+{
+  overflow-x: scroll !important;
 }
