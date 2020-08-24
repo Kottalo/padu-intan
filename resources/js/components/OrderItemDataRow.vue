@@ -245,6 +245,7 @@
     methods: {
       resetData()
       {
+        this.edit_mode = false;
         this.date = this.order_item.order.date;
         this.supplier_id = this.order_item.order.supplier_id;
         this.ref_no = this.order_item.order.ref_no;
@@ -295,9 +296,24 @@
           axios.post('/order_items', data)
           .then((res) => {
             this.$emit('update');
+            this.clear();
           });
         }
       },
+      updateData(order_item, acc)
+      {
+        this.order_item = order_item;
+        this.accumulate = acc;
+      },
+      clear()
+      {
+        this.item_name = '';
+        this.Return = false;
+        this.quantity = '';
+        this.price = '';
+        this.sst_perc = '';
+        this.remarks = '';
+      }
     },
   }
 </script>

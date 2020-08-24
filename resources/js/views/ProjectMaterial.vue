@@ -83,8 +83,9 @@
               >{{ header.title }}</th>
             </tr>
 
-            <template v-for="order in project.orders">
+            <template v-for="(order, key) in project.orders">
               <OrderItemDataRow
+                ref="datarow"
                 :projectId="order.project_id"
                 v-for="order_item in order.order_items"
                 :key="'o'+order_item.id"
@@ -152,6 +153,7 @@
       deleteDialog: false,
 
       accumulator: {},
+      order_items: {},
       cols: 15,
       thead: [
         { title: '日期', width: 130, min: 0, max: 0 },
@@ -243,11 +245,7 @@
 
         axios.post('/order_items/getItems', data)
         .then((res) => {
-          // this.items = {}
-          this.$nextTick()
-          .then(() => {
-            this.items = res.data;
-          })
+          this.items = res.data;
 
           var acc = 0;
           this.accumulator = {};
@@ -255,10 +253,20 @@
           res.data.forEach((project) => {
             project.orders.forEach((order) => {
               order.order_items.forEach((order_item) => {
+                this.order_items[order_item.id] = order_item;
                 this.accumulator[order_item.id] = acc += parseFloat(order_item.sub_total);
               });
             });
           });
+
+          this.$nextTick()
+          .then(() => {
+            this.$refs.datarow.forEach((comp) => {
+              var id = comp.$data.order_item.id;
+              comp.updateData(this.order_items[id], this.accumulator[id]);
+              comp.resetData();
+            });
+          })
         });
       },
     },

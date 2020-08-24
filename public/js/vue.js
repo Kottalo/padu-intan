@@ -424,6 +424,7 @@ __webpack_require__.r(__webpack_exports__);
   },
   methods: {
     resetData: function resetData() {
+      this.edit_mode = false;
       this.date = this.order_item.order.date;
       this.supplier_id = this.order_item.order.supplier_id;
       this.ref_no = this.order_item.order.ref_no;
@@ -470,8 +471,22 @@ __webpack_require__.r(__webpack_exports__);
       } else {
         axios.post('/order_items', data).then(function (res) {
           _this2.$emit('update');
+
+          _this2.clear();
         });
       }
+    },
+    updateData: function updateData(order_item, acc) {
+      this.order_item = order_item;
+      this.accumulate = acc;
+    },
+    clear: function clear() {
+      this.item_name = '';
+      this.Return = false;
+      this.quantity = '';
+      this.price = '';
+      this.sst_perc = '';
+      this.remarks = '';
     }
   }
 });
@@ -867,11 +882,13 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
       deleteDialog: false,
       accumulator: {},
+      order_items: {},
       cols: 15,
       thead: [{
         title: '日期',
@@ -1040,18 +1057,23 @@ __webpack_require__.r(__webpack_exports__);
         date_to: this.date_to
       };
       axios.post('/order_items/getItems', data).then(function (res) {
-        // this.items = {}
-        _this4.$nextTick().then(function () {
-          _this4.items = res.data;
-        });
-
+        _this4.items = res.data;
         var acc = 0;
         _this4.accumulator = {};
         res.data.forEach(function (project) {
           project.orders.forEach(function (order) {
             order.order_items.forEach(function (order_item) {
+              _this4.order_items[order_item.id] = order_item;
               _this4.accumulator[order_item.id] = acc += parseFloat(order_item.sub_total);
             });
+          });
+        });
+
+        _this4.$nextTick().then(function () {
+          _this4.$refs.datarow.forEach(function (comp) {
+            var id = comp.$data.order_item.id;
+            comp.updateData(_this4.order_items[id], _this4.accumulator[id]);
+            comp.resetData();
           });
         });
       });
@@ -3922,11 +3944,13 @@ var render = function() {
                     0
                   ),
                   _vm._v(" "),
-                  _vm._l(project.orders, function(order) {
+                  _vm._l(project.orders, function(order, key) {
                     return [
                       _vm._l(order.order_items, function(order_item) {
                         return _c("OrderItemDataRow", {
                           key: "o" + order_item.id,
+                          ref: "datarow",
+                          refInFor: true,
                           attrs: {
                             projectId: order.project_id,
                             dataMode: "",
