@@ -372,6 +372,11 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: {
     dataMode: Boolean,
@@ -429,6 +434,7 @@ __webpack_require__.r(__webpack_exports__);
       this.supplier_id = this.order_item.order.supplier_id;
       this.ref_no = this.order_item.order.ref_no;
       this.item_name = this.order_item.item.name;
+      this.unit_name = this.order_item.unit.name;
       this.Return = this.order_item["return"];
       this.quantity = this.order_item.quantity;
       this.price = this.order_item.price;
@@ -482,6 +488,7 @@ __webpack_require__.r(__webpack_exports__);
     },
     clear: function clear() {
       this.item_name = '';
+      this.unit_name = '';
       this.Return = false;
       this.quantity = '';
       this.price = '';
@@ -2985,7 +2992,7 @@ var render = function() {
                   }
                 ],
                 staticClass: "ma-0 pa-0 text-center",
-                staticStyle: { "max-width": "100%" },
+                staticStyle: { "max-width": "30px" },
                 domProps: { value: _vm.quantity },
                 on: {
                   input: function($event) {
@@ -2993,6 +3000,28 @@ var render = function() {
                       return
                     }
                     _vm.quantity = $event.target.value
+                  }
+                }
+              }),
+              _vm._v(" "),
+              _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.unit_name,
+                    expression: "unit_name"
+                  }
+                ],
+                staticClass: "ma-0 pa-0 text-center",
+                staticStyle: { "max-width": "30px" },
+                domProps: { value: _vm.unit_name },
+                on: {
+                  input: function($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.unit_name = $event.target.value
                   }
                 }
               })

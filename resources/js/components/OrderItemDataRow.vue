@@ -76,7 +76,12 @@
         <input
           class="ma-0 pa-0 text-center"
           v-model="quantity"
-          style="max-width: 100%"
+          style="max-width: 30px"
+        >
+        <input
+          class="ma-0 pa-0 text-center"
+          v-model="unit_name"
+          style="max-width: 30px"
         >
       </template>
     </td>
@@ -250,6 +255,7 @@
         this.supplier_id = this.order_item.order.supplier_id;
         this.ref_no = this.order_item.order.ref_no;
         this.item_name = this.order_item.item.name;
+        this.unit_name = this.order_item.unit.name;
         this.Return = this.order_item.return;
         this.quantity = this.order_item.quantity;
         this.price = this.order_item.price;
@@ -308,6 +314,7 @@
       clear()
       {
         this.item_name = '';
+        this.unit_name = '';
         this.Return = false;
         this.quantity = '';
         this.price = '';
