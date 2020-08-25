@@ -377,6 +377,8 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: {
     dataMode: Boolean,
@@ -434,7 +436,7 @@ __webpack_require__.r(__webpack_exports__);
       this.supplier_id = this.order_item.order.supplier_id;
       this.ref_no = this.order_item.order.ref_no;
       this.item_name = this.order_item.item.name;
-      this.unit_name = this.order_item.unit.name;
+      this.unit_name = this.order_item.unit ? this.order_item.unit.name : '';
       this.Return = this.order_item["return"];
       this.quantity = this.order_item.quantity;
       this.price = this.order_item.price;
@@ -479,6 +481,8 @@ __webpack_require__.r(__webpack_exports__);
           _this2.$emit('update');
 
           _this2.clear();
+        })["catch"](function (err) {
+          console.log(err.response);
         });
       }
     },
@@ -490,9 +494,9 @@ __webpack_require__.r(__webpack_exports__);
       this.item_name = '';
       this.unit_name = '';
       this.Return = false;
-      this.quantity = '';
-      this.price = '';
-      this.sst_perc = '';
+      this.quantity = 0;
+      this.price = 0;
+      this.sst_perc = 0;
       this.remarks = '';
     }
   }
@@ -890,6 +894,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -939,12 +944,12 @@ __webpack_require__.r(__webpack_exports__);
         max: 0
       }, {
         title: 'SST 百分比',
-        width: 102,
+        width: 52,
         min: 0,
         max: 0
       }, {
         title: 'SST 银额',
-        width: 66,
+        width: 68,
         min: 0,
         max: 0
       }, {
@@ -991,7 +996,8 @@ __webpack_require__.r(__webpack_exports__);
         title: '总价格'
       }, {
         title: 'SST 银额',
-        colspan: 2
+        colspan: 2,
+        align: 'left'
       }, {
         title: '退货'
       }, {
@@ -1067,14 +1073,17 @@ __webpack_require__.r(__webpack_exports__);
         _this4.items = res.data;
         var acc = 0;
         _this4.accumulator = {};
-        res.data.forEach(function (project) {
-          project.orders.forEach(function (order) {
-            order.order_items.forEach(function (order_item) {
-              _this4.order_items[order_item.id] = order_item;
-              _this4.accumulator[order_item.id] = acc += parseFloat(order_item.sub_total);
+
+        if (res.data) {
+          res.data.forEach(function (project) {
+            project.orders.forEach(function (order) {
+              order.order_items.forEach(function (order_item) {
+                _this4.order_items[order_item.id] = order_item;
+                _this4.accumulator[order_item.id] = acc += parseFloat(order_item.sub_total);
+              });
             });
           });
-        });
+        }
 
         _this4.$nextTick().then(function () {
           _this4.$refs.datarow.forEach(function (comp) {
@@ -1099,6 +1108,8 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+//
+//
 //
 //
 //
@@ -1324,7 +1335,7 @@ __webpack_require__.r(__webpack_exports__);
         date_from: this.date_from,
         date_to: this.date_to
       };
-      axios.post('/orders/getItems', data).then(function (res) {
+      axios.post('/payments/getItems', data).then(function (res) {
         _this4.items = {};
 
         _this4.$nextTick().then(function () {
@@ -2971,10 +2982,9 @@ var render = function() {
           ? [
               _vm._v(
                 "\n      " +
-                  _vm._s(
-                    _vm.order_item.quantity +
-                      (_vm.order_item.unit ? _vm.order_item.unit.name : "")
-                  ) +
+                  _vm._s(_vm.order_item.quantity) +
+                  "  " +
+                  _vm._s(_vm.order_item.unit ? _vm.order_item.unit.name : "") +
                   "\n    "
               )
             ]
@@ -3097,7 +3107,8 @@ var render = function() {
                     expression: "sst_perc"
                   }
                 ],
-                staticClass: "ma-0 pa-0",
+                staticClass: "ma-0 pa-0 text-right",
+                staticStyle: { "max-width": "22px" },
                 domProps: { value: _vm.sst_perc },
                 on: {
                   input: function($event) {
@@ -3107,7 +3118,8 @@ var render = function() {
                     _vm.sst_perc = $event.target.value
                   }
                 }
-              })
+              }),
+              _vm._v("\n      %\n    ")
             ]
           : _vm._e()
       ],
@@ -3123,7 +3135,11 @@ var render = function() {
     _c(
       "td",
       { staticClass: "text-right", class: { "text-danger": _vm.Return } },
-      [_vm._v("\n    " + _vm._s(_vm.sub_total.toFixed(2)) + "\n  ")]
+      [
+        _vm._v(
+          "\n    " + _vm._s(_vm.Return ? _vm.sub_total.toFixed(2) : "") + "\n  "
+        )
+      ]
     ),
     _vm._v(" "),
     _c(
@@ -3963,6 +3979,7 @@ var render = function() {
                       return _c(
                         "th",
                         {
+                          class: { "text-left": header.align == "left" },
                           attrs: {
                             colspan: header.colspan ? header.colspan : ""
                           }
@@ -4353,48 +4370,58 @@ var render = function() {
                 "datatable table table-sm table-bordered table-hover bg-white"
             },
             [
-              _vm._l(_vm.items, function(supplier) {
+              _vm._l(_vm.items, function(project) {
                 return [
-                  _vm._l(supplier.orders, function(order, key) {
-                    return _c("PaymentDataRow", {
-                      key: key,
-                      attrs: {
-                        Order: order,
-                        accumulator: _vm.accumulator[order.id]
-                      },
-                      on: {
-                        update: function($event) {
-                          return _vm.getItems()
-                        }
-                      }
-                    })
-                  }),
-                  _vm._v(" "),
-                  _c("tr", [
-                    _c(
-                      "th",
-                      { staticClass: "text-right", attrs: { colspan: "4" } },
-                      [_vm._v("Total")]
-                    ),
-                    _vm._v(" "),
-                    _c("th", { staticClass: "text-right text-primary" }, [
-                      _vm._v(_vm._s(supplier.order_total))
-                    ]),
-                    _vm._v(" "),
-                    _c(
-                      "th",
-                      { staticClass: "text-right", attrs: { colspan: "7" } },
-                      [_vm._v("Total")]
-                    ),
-                    _vm._v(" "),
-                    _c("th", { staticClass: "text-right text-primary" }, [
-                      _vm._v(_vm._s(supplier.payment_total))
-                    ]),
-                    _vm._v(" "),
-                    _c("th", { attrs: { colspan: "4" } })
-                  ]),
-                  _vm._v(" "),
-                  _c("tr", [_c("td", { attrs: { colspan: "17" } })])
+                  _vm._l(_vm.items, function(supplier) {
+                    return [
+                      _vm._l(supplier.orders, function(order, key) {
+                        return _c("PaymentDataRow", {
+                          key: key,
+                          attrs: {
+                            Order: order,
+                            accumulator: _vm.accumulator[order.id]
+                          },
+                          on: {
+                            update: function($event) {
+                              return _vm.getItems()
+                            }
+                          }
+                        })
+                      }),
+                      _vm._v(" "),
+                      _c("tr", [
+                        _c(
+                          "th",
+                          {
+                            staticClass: "text-right",
+                            attrs: { colspan: "4" }
+                          },
+                          [_vm._v("Total")]
+                        ),
+                        _vm._v(" "),
+                        _c("th", { staticClass: "text-right text-primary" }, [
+                          _vm._v(_vm._s(supplier.order_total))
+                        ]),
+                        _vm._v(" "),
+                        _c(
+                          "th",
+                          {
+                            staticClass: "text-right",
+                            attrs: { colspan: "7" }
+                          },
+                          [_vm._v("Total")]
+                        ),
+                        _vm._v(" "),
+                        _c("th", { staticClass: "text-right text-primary" }, [
+                          _vm._v(_vm._s(supplier.payment_total))
+                        ]),
+                        _vm._v(" "),
+                        _c("th", { attrs: { colspan: "4" } })
+                      ]),
+                      _vm._v(" "),
+                      _c("tr", [_c("td", { attrs: { colspan: "17" } })])
+                    ]
+                  })
                 ]
               })
             ],

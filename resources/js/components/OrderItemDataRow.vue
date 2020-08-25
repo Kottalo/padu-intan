@@ -69,7 +69,7 @@
 
     <td>
       <template v-if="data_mode && !edit_mode">
-        {{ order_item.quantity + (order_item.unit ? order_item.unit.name : '') }}
+        {{ order_item.quantity }}&nbsp;&nbsp;{{ (order_item.unit ? order_item.unit.name : '') }}
       </template>
 
       <template v-if="create_mode || edit_mode">
@@ -111,9 +111,11 @@
 
       <template v-if="create_mode || edit_mode">
         <input
-          class="ma-0 pa-0"
+          class="ma-0 pa-0 text-right"
           v-model="sst_perc"
+          style="max-width: 22px"
         >
+        %
       </template>
     </td>
 
@@ -122,7 +124,7 @@
     </td>
 
     <td class="text-right" :class="{'text-danger': Return}">
-      {{ sub_total.toFixed(2) }}
+      {{ Return ? sub_total.toFixed(2) : '' }}
     </td>
 
     <td class="text-right" :class="{'text-danger': Return}">
@@ -255,7 +257,7 @@
         this.supplier_id = this.order_item.order.supplier_id;
         this.ref_no = this.order_item.order.ref_no;
         this.item_name = this.order_item.item.name;
-        this.unit_name = this.order_item.unit.name;
+        this.unit_name = this.order_item.unit ? this.order_item.unit.name : '';
         this.Return = this.order_item.return;
         this.quantity = this.order_item.quantity;
         this.price = this.order_item.price;
@@ -303,6 +305,9 @@
           .then((res) => {
             this.$emit('update');
             this.clear();
+          })
+          .catch((err) => {
+            console.log(err.response);
           });
         }
       },
@@ -316,9 +321,9 @@
         this.item_name = '';
         this.unit_name = '';
         this.Return = false;
-        this.quantity = '';
-        this.price = '';
-        this.sst_perc = '';
+        this.quantity = 0;
+        this.price = 0;
+        this.sst_perc = 0;
         this.remarks = '';
       }
     },

@@ -13,11 +13,19 @@ class CreatePaymentsTable extends Migration
      */
     public function up()
     {
+        Schema::dropIfExists('payments');
+
         Schema::create('payments', function (Blueprint $table) {
             $table->id();
-            $table->integer('order_id');
+            $table->date('date')->nullable();
+            $table->integer('year');
+            $table->integer('month');
+            $table->string('order_no');
+            $table->integer('project_id');
+            $table->integer('supplier_id');
             $table->string('voucher_no');
             $table->string('ref_no');
+            $table->integer('bank_id');
             $table->decimal('cheque');
             $table->decimal('cash');
             $table->decimal('online');

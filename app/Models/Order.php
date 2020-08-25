@@ -8,9 +8,9 @@ use OrderItem;
 class Order extends Model
 {
     // protected $appends = [
-    //   'sst_amount',
+    //   // 'sst_amount',
     //   'total',
-    //   'sub_total',
+    //   // 'sub_total',
     // ];
 
     public function project()
@@ -33,46 +33,46 @@ class Order extends Model
         return $this->hasOne('App\Models\Payment');
     }
 
-    // public function getTotalAttribute()
-    // {
-    //     $order_items = $this->order_items;
-    //
-    //     $total = 0;
-    //
-    //     foreach ($order_items as $order_item)
-    //     {
-    //         $total += $order_item->total;
-    //     }
-    //
-    //     return $total;
-    // }
-    //
-    // public function getSstAmountAttribute()
-    // {
-    //     $order_items = $this->order_items;
-    //
-    //     $total = 0;
-    //
-    //     foreach ($order_items as $order_item)
-    //     {
-    //         $total += $order_item->sst_amount;
-    //     }
-    //
-    //     return $total;
-    // }
-    //
-    // public function getSubTotalAttribute()
-    // {
-    //     $order_items = $this->order_items;
-    //
-    //     $total = 0;
-    //
-    //     foreach ($order_items as $order_item)
-    //     {
-    //         $value = $order_item->sub_total;
-    //         $total += $order_item->return ? -$value : $value;
-    //     }
-    //
-    //     return $total;
-    // }
+    public function getTotalAttribute()
+    {
+        $order_items = $this->order_items;
+
+        $total = 0;
+
+        foreach ($order_items as $order_item)
+        {
+            $total += $order_item->total;
+        }
+
+        return $total;
+    }
+
+    public function getSstAmountAttribute()
+    {
+        $order_items = $this->order_items;
+
+        $total = 0;
+
+        foreach ($order_items as $order_item)
+        {
+            $total += $order_item->sst_amount;
+        }
+
+        return $total;
+    }
+
+    public function getSubTotalAttribute()
+    {
+        $order_items = $this->order_items;
+
+        $total = 0;
+
+        foreach ($order_items as $order_item)
+        {
+            $value = $order_item->sub_total;
+            $total += $order_item->return ? -$value : $value;
+        }
+
+        return $total;
+    }
 }

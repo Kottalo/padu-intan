@@ -56,6 +56,8 @@ Route::middleware(['auth'])->group(function () {
 
     Route::post('/order_items/getItems', 'OrderItemController@getItems');
 
+    Route::post('/payments/getItems', 'PaymentController@getItems');
+
     Route::prefix('orders')->group(function() {
         Route::post('getItems', 'OrderController@getItems');
     });

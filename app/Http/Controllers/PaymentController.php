@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-use App\Models\{ Payment, Order, Bank };
+use DB;
+use Carbon\Carbon;
+use App\Models\{ Project, Payment, Order, Bank };
 
 class PaymentController extends Controller
 {
@@ -112,10 +114,27 @@ class PaymentController extends Controller
     {
         foreach (Order::get() as $order)
         {
-            $p = new Payment;
+            $year = (new Carbon($order->date))->year;
+            $month = (new Carbon($order->date))->month;
 
-            $p->order_id = $order->id;
+            $p = Payment::where([
+                'year' => $year,
+                'month' => $month,
+                'project_id' => $order->project_id,
+                'supplier_id' => $order->supplier_id,
+            ])->first();
+
+            if (!$p)
+            {
+                $p = new Payment;
+            }
+
+            $p->year = $year;
+            $p->month = $month;
+            $p->project_id = $order->project_id;
+            $p->supplier_id = $order->supplier_id;
             $p->voucher_no = '';
+            $p->order_no = '';
             $p->ref_no = '';
             $p->cheque = 0;
             $p->cash = 0;
@@ -124,5 +143,27 @@ class PaymentController extends Controller
 
             $p->save();
         }
+    }
+
+    public function getItems(Request $request)
+    {
+        $earliestDate = Order::get() ? Order::orderBy('date')->first()->date : Carbon::today()->format('Y-m-d');
+        $lastDate = Order::get() ? Order::orderBy('date')->get()->last()->date : Carbon::today()->format('Y-m-d');
+
+        $projectIds = $request->projectIds;
+        $supplierIds = $request->supplierIds;
+        $date_from = $request->date_from ? $request->date_from : $earliestDate;
+        $date_to = $request->date_to ? $request->date_to : $lastDate;
+
+        $items = Project::whereIn('id', $projectIds)
+        ->with([
+            'payments' => function($query) use($supplierIds) {
+                $query->whereIn('supplier_id', $supplierIds);
+            },
+            'payments.supplier.payments.bank',
+        ])
+        ->get();
+
+        return $items;
     }
 }

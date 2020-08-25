@@ -52,3 +52,9 @@ html
 {
   overflow-x: scroll !important;
 }
+
+.v-select__selections
+{
+  max-height: 32px;
+  overflow-y: hidden;
+}

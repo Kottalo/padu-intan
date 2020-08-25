@@ -143,11 +143,11 @@ class OrderController extends Controller
           'orders.payment.bank'
         ])
         ->selectRaw('suppliers.id, s1.order_total, p1.payment_total')
-        ->leftJoin('orders', 'suppliers.id', '=', 'orders.supplier_id')
-        ->leftJoin('order_items', 'orders.id', '=', 'order_items.order_id')
-        ->leftJoin('payments', 'orders.id', '=', 'payments.order_id')
-        ->leftJoin('projects', 'orders.project_id', '=', 'projects.id')
-        ->leftJoin(
+        ->join('orders', 'suppliers.id', '=', 'orders.supplier_id')
+        ->join('order_items', 'orders.id', '=', 'order_items.order_id')
+        ->join('payments', 'orders.id', '=', 'payments.order_id')
+        ->join('projects', 'orders.project_id', '=', 'projects.id')
+        ->join(
             DB::raw("(SELECT supplier_id AS id,
             round2( SUM( (order_items.quantity * CASE WHEN `return` THEN -order_items.price ELSE order_items.price END) +
             ( order_items.quantity * CASE WHEN `return` THEN -order_items.price ELSE order_items.price END * sst_perc )) ) AS order_total
@@ -164,7 +164,7 @@ class OrderController extends Controller
                 $join->on('suppliers.id', '=', 's1.id');
             }
         )
-        ->leftJoin(
+        ->join(
             DB::raw("(SELECT supplier_id AS id,
             round2( SUM( cheque + cash + online ) ) AS payment_total
             FROM orders

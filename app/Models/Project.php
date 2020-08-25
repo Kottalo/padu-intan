@@ -20,4 +20,9 @@ class Project extends Model
     {
         return $this->belongsToMany('App\Models\Supplier', 'project_suppliers');
     }
+
+    public function payments()
+    {
+        return $this->hasMany('App\Models\Payment');
+    }
 }

@@ -80,6 +80,7 @@
               <th
                 v-for="header in headers"
                 :colspan="header.colspan ? header.colspan : ''"
+                :class="{'text-left': header.align == 'left'}"
               >{{ header.title }}</th>
             </tr>
 
@@ -164,8 +165,8 @@
         { title: '数量', width: 86, min: 0, max: 0 },
         { title: '价格', width: 68, min: 0, max: 0 },
         { title: '总价格', width: 96, min: 0, max: 0 },
-        { title: 'SST 百分比', width: 102, min: 0, max: 0 },
-        { title: 'SST 银额', width: 66, min: 0, max: 0 },
+        { title: 'SST 百分比', width: 52, min: 0, max: 0 },
+        { title: 'SST 银额', width: 68, min: 0, max: 0 },
         { title: '退货', width: 96, min: 0, max: 0 },
         { title: '总数', width: 74, min: 0, max: 0 },
         { title: '总结', width: 96, min: 0, max: 0 },
@@ -181,7 +182,7 @@
         { title: '数量', },
         { title: '价格', },
         { title: '总价格', },
-        { title: 'SST 银额', colspan: 2,},
+        { title: 'SST 银额', colspan: 2, align: 'left'},
         { title: '退货', },
         { title: '总数', },
         { title: '总结', },
@@ -250,14 +251,17 @@
           var acc = 0;
           this.accumulator = {};
 
-          res.data.forEach((project) => {
-            project.orders.forEach((order) => {
-              order.order_items.forEach((order_item) => {
-                this.order_items[order_item.id] = order_item;
-                this.accumulator[order_item.id] = acc += parseFloat(order_item.sub_total);
+          if (res.data)
+          {
+            res.data.forEach((project) => {
+              project.orders.forEach((order) => {
+                order.order_items.forEach((order_item) => {
+                  this.order_items[order_item.id] = order_item;
+                  this.accumulator[order_item.id] = acc += parseFloat(order_item.sub_total);
+                });
               });
             });
-          });
+          }
 
           this.$nextTick()
           .then(() => {

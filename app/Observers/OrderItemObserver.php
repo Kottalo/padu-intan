@@ -2,7 +2,7 @@
 
 namespace App\Observers;
 
-use App\Models\OrderItem;
+use App\Models\{ OrderItem, Order };
 
 class OrderItemObserver
 {
@@ -36,7 +36,7 @@ class OrderItemObserver
      */
     public function deleted(OrderItem $orderItem)
     {
-        //
+        $this->clearOrders($orderItem->order);
     }
 
     /**
@@ -59,5 +59,13 @@ class OrderItemObserver
     public function forceDeleted(OrderItem $orderItem)
     {
         //
+    }
+
+    public function clearOrders($order)
+    {
+        if (!$order->order_items->count())
+        {
+            $order->delete();
+        }
     }
 }

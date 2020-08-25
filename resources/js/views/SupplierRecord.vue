@@ -72,27 +72,29 @@
         </thead>
 
         <tbody class="datatable table table-sm table-bordered table-hover bg-white">
-          <template v-for="supplier in items">
+          <template v-for="project in items">
+            <template v-for="supplier in items">
 
-            <PaymentDataRow
-              v-for="(order, key) in supplier.orders"
-              :key="key"
-              :Order="order"
-              :accumulator="accumulator[order.id]"
-              @update="getItems()"
-            ></PaymentDataRow>
+              <PaymentDataRow
+                v-for="(order, key) in supplier.orders"
+                :key="key"
+                :Order="order"
+                :accumulator="accumulator[order.id]"
+                @update="getItems()"
+              ></PaymentDataRow>
 
-            <tr>
-              <th class="text-right" colspan="4">Total</th>
-              <th class="text-right text-primary">{{ supplier.order_total }}</th>
-              <th class="text-right" colspan="7">Total</th>
-              <th class="text-right text-primary">{{ supplier.payment_total }}</th>
-              <th colspan="4"></th>
-            </tr>
+              <tr>
+                <th class="text-right" colspan="4">Total</th>
+                <th class="text-right text-primary">{{ supplier.order_total }}</th>
+                <th class="text-right" colspan="7">Total</th>
+                <th class="text-right text-primary">{{ supplier.payment_total }}</th>
+                <th colspan="4"></th>
+              </tr>
 
-            <tr>
-              <td colspan="17"></td>
-            </tr>
+              <tr>
+                <td colspan="17"></td>
+              </tr>
+            </template>
           </template>
         </tbody>
       </table>
@@ -186,7 +188,7 @@
           date_to: this.date_to,
         };
 
-        axios.post('/orders/getItems', data)
+        axios.post('/payments/getItems', data)
         .then((res) => {
           this.items = {}
           this.$nextTick()

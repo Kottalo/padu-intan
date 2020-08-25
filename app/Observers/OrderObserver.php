@@ -3,6 +3,7 @@
 namespace App\Observers;
 
 use App\Models\{ Order, Payment };
+use Carbon\Carbon;
 
 class OrderObserver
 {
@@ -14,16 +15,7 @@ class OrderObserver
      */
     public function created(Order $order)
     {
-        $payment = new Payment;
-
-        $payment->order_id = $order->id;
-        $payment->voucher_no = '';
-        $payment->ref_no = '';
-        $payment->cheque = 0;
-        $payment->cash = 0;
-        $payment->remarks = '';
-
-        $payment->save();
+        $this->createPayments($order);
     }
 
     /**
@@ -45,7 +37,7 @@ class OrderObserver
      */
     public function deleted(Order $order)
     {
-        //
+        $this->clearPayments($order);
     }
 
     /**
@@ -68,5 +60,64 @@ class OrderObserver
     public function forceDeleted(Order $order)
     {
         //
+    }
+
+    public function createPayments($order)
+    {
+        $year = (new Carbon($order->date))->year;
+        $month = (new Carbon($order->date))->month;
+
+        $p = Payment::where([
+            'year' => $year,
+            'month' => $month,
+            'project_id' => $order->project_id,
+            'supplier_id' => $order->supplier_id,
+        ])->first();
+
+        if ($p)
+        {
+            return;
+        }
+
+        $p = new Payment;
+
+        $p->year = $year;
+        $p->month = $month;
+        $p->project_id = $order->project_id;
+        $p->supplier_id = $order->supplier_id;
+        $p->voucher_no = '';
+        $p->order_no = '';
+        $p->ref_no = '';
+        $p->cheque = 0;
+        $p->cash = 0;
+        $p->online = 0;
+        $p->remarks = '';
+
+        $p->save();
+    }
+
+    public function clearPayments($order)
+    {
+        $year = (new Carbon($order->date))->year;
+        $month = (new Carbon($order->date))->month;
+
+        $orders = Order::where([
+          'project_id' => $order->project_id,
+          'supplier_id' => $order->supplier_id,
+        ])
+        ->whereRaw('YEAR(date) = ?', [$year])
+        ->whereRaw('MONTH(date) = ?', [$month])
+        ->get();
+
+        if (!$orders->count())
+        {
+            Payment::where([
+              'project_id' => $order->project_id,
+              'supplier_id' => $order->supplier_id,
+              'year' => $year,
+              'month' => $month,
+            ])
+            ->delete();
+        }
     }
 }

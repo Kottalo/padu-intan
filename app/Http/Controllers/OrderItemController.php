@@ -66,29 +66,25 @@ class OrderItemController extends Controller
 
         $order_id = $order->id;
 
-        $item = Item::where([
-            'name' => $item_name,
-        ])->first();
+        $item = Item::whereRaw('BINARY `name` = ?', [$item_name])->first();
 
         if (!$item)
         {
             $item = new Item;
-
-            $item->name = $item_name;
         }
+        $item->name = $item_name;
         $item->price = $price;
 
         $item->save();
 
-        $unit = Unit::whereName($unit_name)->first();
+        $unit = Unit::whereRaw('BINARY `name` = ?', [$unit_name])->first();
 
-        if (!$unit && $unit_name)
+        if (!$unit)
         {
             $unit = new Unit;
-
-            $unit->name = $unit_name;
-            $unit->save();
         }
+        $unit->name = $unit_name;
+        $unit->save();
 
         $order_item = new OrderItem;
 
@@ -145,29 +141,25 @@ class OrderItemController extends Controller
         $unit_name = $request->unit_name;
         $price = $request->price;
 
-        $item = Item::where([
-            'name' => $item_name,
-        ])->first();
+        $item = Item::whereRaw('BINARY `name` = ?', [$item_name])->first();
 
         if (!$item)
         {
             $item = new Item;
-
-            $item->name = $item_name;
         }
+        $item->name = $item_name;
         $item->price = $price;
 
         $item->save();
 
-        $unit = Unit::whereName($unit_name)->first();
+        $unit = Unit::whereRaw('BINARY `name` = ?', [$unit_name])->first();
 
-        if (!$unit && $unit_name)
+        if (!$unit)
         {
             $unit = new Unit;
-
-            $unit->name = $unit_name;
-            $unit->save();
         }
+        $unit->name = $unit_name;
+        $unit->save();
 
         $order = Order::where([
             'date' => $date,
@@ -236,6 +228,7 @@ class OrderItemController extends Controller
         $date_to = $request->date_to ? $request->date_to : $lastDate;
 
         $projectId_sql = $projectIds ? '(' . join(',', $projectIds) . ')' : '(0)';
+        $supplierId_sql = $supplierIds ? '(' . join(',', $supplierIds) . ')' : '(0)';
 
         return Project::with([
             'orders' => function($query) use ($supplierIds, $date_from, $date_to)
@@ -287,6 +280,7 @@ class OrderItemController extends Controller
             LEFT JOIN orders ON projects.id = orders.project_id
             LEFT JOIN order_items ON orders.id = order_items.order_id
             WHERE projects.id IN $projectId_sql
+            AND orders.supplier_id IN $supplierId_sql
             AND orders.date BETWEEN '$date_from' AND '$date_to'
             GROUP BY projects.id)
             AS p1

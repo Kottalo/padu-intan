@@ -6,8 +6,8 @@ use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Blade;
 use App\View\Components\ConfirmModal;
 
-use App\Models\Order;
-use App\Observers\OrderObserver;
+use App\Models\{ Order,OrderItem };
+use App\Observers\{ OrderItemObserver, OrderObserver };
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -29,6 +29,7 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         Blade::component('confirm-modal', ConfirmModal::class);
+        OrderItem::observe(OrderItemObserver::class);
         Order::observe(OrderObserver::class);
     }
 }
